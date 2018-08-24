@@ -1,4 +1,5 @@
 const {Command, flags} = require('@oclif/command')
+const chalk = require('chalk')
 const products = require('../sub-commands/billings/products')
 
 class BillingCommand extends Command {
@@ -9,8 +10,8 @@ class BillingCommand extends Command {
     case 'products':
       products(this, args, flags)
       return
-    case 'create':
-      this.log('create')
+    case 'subscriptions':
+      this.log(chalk.green('create'))
       break
     default:
       this.error('given invalid command')
@@ -28,6 +29,11 @@ Extra documentation goes here
 
 BillingCommand.flags = {
   help: flags.help({char: 'h'}),
+  format: flags.string({
+    char: 'f',
+    default: 'json',
+    description: 'output format - json, text',
+  }),
   verbose: flags.boolean({char: 'v', description: 'debug mode'}),
 }
 BillingCommand.args = [
