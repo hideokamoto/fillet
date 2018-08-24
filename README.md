@@ -1,4 +1,4 @@
-fillet
+Fillet
 ======
 
 CLI tools for Stripe 
@@ -20,7 +20,7 @@ $ npm install -g fillet
 $ fillet COMMAND
 running command...
 $ fillet (-v|--version|version)
-fillet/0.0.0 darwin-x64 node-v10.5.0
+fillet/0.0.0 darwin-x64 node-v10.1.0
 $ fillet --help [COMMAND]
 USAGE
   $ fillet COMMAND
@@ -29,8 +29,27 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`fillet billing`](#fillet-billing)
 * [`fillet hello`](#fillet-hello)
 * [`fillet help [COMMAND]`](#fillet-help-command)
+
+## `fillet billing`
+
+Describe the command here
+
+```
+USAGE
+  $ fillet billing
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
 
 ## `fillet hello`
 
