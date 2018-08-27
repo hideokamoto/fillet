@@ -7,6 +7,16 @@ class BillingCommand extends Command {
     const {args, flags} = this.parse(BillingCommand)
     const {type} = args
     switch (type) {
+    case 'list-products': {
+      const list = require('../sub-commands/billings/products/list')
+      list(this, flags)
+      return
+    }
+    case 'import-products': {
+      const imports = require('../sub-commands/billings/products/import')
+      imports(this, flags)
+      return
+    }
     case 'products':
       products(this, args, flags)
       return
@@ -34,6 +44,8 @@ BillingCommand.flags = {
     default: 'json',
     description: 'output format - json, text',
   }),
+  output: flags.boolean({char: 'o'}),
+  fileName: flags.string({char: 'n', default: ''}),
   verbose: flags.boolean({char: 'v', description: 'debug mode'}),
 }
 BillingCommand.args = [
@@ -41,10 +53,6 @@ BillingCommand.args = [
     name: 'type',
     required: true,
     description: 'products, subscriptions',
-  }, {
-    name: 'action',
-    required: true,
-    description: 'create',
   },
 ]
 
