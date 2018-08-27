@@ -1,6 +1,6 @@
 const {green} = require('chalk')
 const fs = require('fs')
-const stripe = require('../../../libs/stripe')
+const stripe = require('../../../stripe')
 
 module.exports = async function (self, flags) {
   const params = {

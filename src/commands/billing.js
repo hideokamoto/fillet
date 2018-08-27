@@ -1,6 +1,5 @@
 const {Command, flags} = require('@oclif/command')
 const chalk = require('chalk')
-const products = require('../sub-commands/billings/products')
 
 class BillingCommand extends Command {
   async run() {
@@ -8,18 +7,15 @@ class BillingCommand extends Command {
     const {type} = args
     switch (type) {
     case 'list-products': {
-      const list = require('../sub-commands/billings/products/list')
+      const list = require('../libs/billings/products/commands/list')
       list(this, flags)
       return
     }
     case 'import-products': {
-      const imports = require('../sub-commands/billings/products/import')
+      const imports = require('../libs/billings/products/commands/import')
       imports(this, flags)
       return
     }
-    case 'products':
-      products(this, args, flags)
-      return
     case 'subscriptions':
       this.log(chalk.green('create'))
       break
