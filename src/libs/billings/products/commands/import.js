@@ -1,4 +1,4 @@
-const {red} = require('chalk')
+const {green, red} = require('chalk')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const stripe = require('../../../stripe')
@@ -16,14 +16,8 @@ module.exports = async function (self, flags) {
   const yamlData = fs.readFileSync(`./${fileName}`, 'utf8')
   const fileData = yaml.safeLoad(yamlData)
   const manager = new ProductManager(self, stripe)
-  if (fileData.id) {
-    // update product
-    const updateProduct = new UpdateProduct(fileData)
-    await manager.updateProduct(updateProduct)
-  } else {
-    // create product
-    await manager.createProduct(fileData)
-  }
+  const projectId = await manager.importProduct(fileData, UpdateProduct)
+  self.log(`${green('Import product:')}: ${projectId}`)
   // @TODO
   // update plans
   self.log(fileData)
