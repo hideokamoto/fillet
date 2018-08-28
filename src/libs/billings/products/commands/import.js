@@ -25,8 +25,6 @@ module.exports = async function (self, flags) {
   const fileData = yaml.safeLoad(yamlData)
   const product = await importProduct(self, stripe, fileData)
   fileData.id = product.id
-  // @TODO
-  // update plans
   const manager = new PlanManager(self, stripe, flags)
   fileData.plans = await manager.importPlans(product, fileData)
   const output = yaml.safeDump(fileData)

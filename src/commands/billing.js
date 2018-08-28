@@ -6,12 +6,17 @@ class BillingCommand extends Command {
     const {args, flags} = this.parse(BillingCommand)
     const {type} = args
     switch (type) {
+    case 'diff-product': {
+      const diff = require('../libs/billings/products/commands/product-diff')
+      diff(this, flags)
+      return
+    }
     case 'list-products': {
       const list = require('../libs/billings/products/commands/list')
       list(this, flags)
       return
     }
-    case 'import-products': {
+    case 'import-product': {
       const imports = require('../libs/billings/products/commands/import')
       imports(this, flags)
       return
