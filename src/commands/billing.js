@@ -7,8 +7,13 @@ class BillingCommand extends Command {
     const {type} = args
     switch (type) {
     case 'diff-product': {
-      const diff = require('../libs/billings/products/commands/product-diff')
-      diff(this, flags)
+      const diffProduct = require('../libs/billings/products/commands/product-diff')
+      diffProduct(this, flags)
+      return
+    }
+    case 'diff-plans': {
+      const diffPlans = require('../libs/billings/products/commands/plan-diff')
+      diffPlans(this, flags)
       return
     }
     case 'list-products': {
