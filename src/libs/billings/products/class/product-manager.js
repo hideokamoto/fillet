@@ -7,7 +7,6 @@ class ProductManager extends Manager {
       const props = product.getUpdateProps()
       const result = await this.stripe.products.update(id, props)
       if (result instanceof Error) throw result
-      this.oclif.log(result)
       return result
     } catch (e) {
       this.oclif.log('Fail to update product')

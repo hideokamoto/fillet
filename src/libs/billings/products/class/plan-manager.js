@@ -69,7 +69,7 @@ class ProductManager extends Manager {
     } catch (e) {
       this.oclif.log(red('Fail to update product:'))
       this.oclif.log(JSON.stringify(e))
-      throw e
+      return e
     }
   }
 
@@ -103,38 +103,39 @@ class ProductManager extends Manager {
     }
   }
 
-  async dispatchImportPlans(plan, productId) {
-    if (!plan.id) {
-      const createdPlan = await this.createPlan(plan, productId)
-      return createdPlan
-    }
+  async deletePlan(planId) {
     try {
-      const currentPlan = await this.stripe.plans.retrieve(plan.id)
-      if (currentPlan instanceof Error) throw currentPlan
-      // Check is the plan updateable
-      if (plan.amount !== currentPlan.amount) {
-        // force flag
-        this.oclif.log(red(`plan: ${plan.id} has been skipped.`))
-        this.oclif.log(red('If you replace the plan, please run the command with -f / --force option'))
-        return currentPlan
-      }
-      // @TODO update stripe plan
-      return currentPlan
+      const result = await this.stripe.plans.del(planId)
+      this.oclif.log(green('plan deleted:' + result.id))
+      return result
     } catch (e) {
-      if (e.statusCode === 404 && e.message.startsWith('No such plan')) {
-        const newPlan = await this.createPlan(plan, productId)
-        return newPlan
-      }
-      this.oclif.error(e)
+      this.oclif.log(red('Failed to delete plan:' + planId))
+      this.oclif.log(e)
+      throw e
     }
+  }
+
+  async replacePlan(plan, productId) {
+    this.oclif.log(red(`[Replace]: ${plan.id}`))
+    this.oclif.log(green('[Replace]:') + `starting to delete ${plan.id}`)
+    await this.deletePlan(plan.id)
+    this.oclif.log(green('[Replace]:') + 'starting to create new plan')
+    const newPlan = await this.createPlan(plan, productId)
+    this.oclif.log(green('[Replace]:') + `replace new plan: ${newPlan.id}`)
+    return newPlan
+  }
+
+  getProductId(plan, product) {
+    if (plan.product) return plan.product
+    return product.id
   }
 
   async importPlans(product, fileData) {
     if (!product || Object.keys(product).lenght === 0) return this.oclif.log('Product not found')
     if (!fileData.plans || fileData.plans.length === 0) return this.oclif.log('No plans')
     const {plans} = fileData
-    const productId = product.id
     await Promise.all(plans.map(async (plan, key) => {
+      const productId = this.getProductId(plan, product)
       const action = await this.dispatchImportPlan(plan, productId)
       let data = {}
       switch (action) {
@@ -145,7 +146,7 @@ class ProductManager extends Manager {
         data = await this.updatePlan(plan)
         break
       case 'force-update':
-        this.oclif.log('force update')
+        data = await this.replacePlan(plan, productId)
         break
       case 'replace-confirm':
         this.oclif.log(red(`plan: ${plan.id} has been skipped.`))
