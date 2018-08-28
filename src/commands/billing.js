@@ -35,10 +35,10 @@ Extra documentation goes here
 
 BillingCommand.flags = {
   help: flags.help({char: 'h'}),
-  format: flags.string({
+  force: flags.boolean({
     char: 'f',
-    default: 'json',
-    description: 'output format - json, text',
+    default: false,
+    description: 'Should replace plan or products',
   }),
   output: flags.boolean({char: 'o'}),
   fileName: flags.string({char: 'n', default: ''}),
