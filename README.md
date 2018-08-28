@@ -1,4 +1,4 @@
-Fillet
+Fillet [WIP]
 ======
 
 CLI tools for Stripe 
@@ -10,13 +10,28 @@ CLI tools for Stripe
 [![License](https://img.shields.io/npm/l/fillet.svg)](https://github.com/hideokamoto/fillet/blob/master/package.json)
 
 <!-- toc -->
+* [Getting Started](#gs)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+# Getting Started {#gs}
+
+```sh-session
+$ npm i -g fillet
+
+# use direnv
+$ vim .envrc
+export STRIPE_SECRET='sk_test_XXXXXXX'
+$ direnv allow
+$ fillet COMMAND
+
+# directory
+$ STRIPE_SECRET='sk_test_XXXXXXX' fillet COMMAND
+```
+
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g fillet
 $ fillet COMMAND
 running command...
 $ fillet (-v|--version|version)
@@ -30,7 +45,6 @@ USAGE
 # Commands
 <!-- commands -->
 * [`fillet billing`](#fillet-billing)
-* [`fillet hello`](#fillet-hello)
 * [`fillet help [COMMAND]`](#fillet-help-command)
 
 ## `fillet billing`
@@ -50,24 +64,6 @@ DESCRIPTION
 ```
 
 _See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
-
-## `fillet hello`
-
-Describe the command here
-
-```
-USAGE
-  $ fillet hello
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src/commands/hello.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/hello.js)_
 
 ## `fillet help [COMMAND]`
 
