@@ -23,12 +23,23 @@ module.exports = async function (self, flags) {
   }
   const yamlData = fs.readFileSync(`./${fileName}`, 'utf8')
   const fileData = yaml.safeLoad(yamlData)
-  const product = await importProduct(self, stripe, fileData)
+  const importPlanData = {
+    ...fileData,
+  }
+  const importProductData = {
+    ...fileData,
+  }
+  const product = await importProduct(self, stripe, importProductData)
   fileData.id = product.id
-  const manager = new PlanManager(self, stripe, flags)
-  fileData.plans = await manager.importPlans(product, fileData)
+  importPlanData.id = product.id
+  try {
+    const manager = new PlanManager(self, stripe, flags)
+    fileData.plans = await manager.importPlans(product, importPlanData)
+  } catch (e) {
+    self.log(e)
+  }
   const output = yaml.safeDump(fileData)
-  fs.writeFileSync(`./${fileName}.yml`, output)
+  fs.writeFileSync(`./${fileName}`, output)
   self.log(green('Finished'))
 }
 
