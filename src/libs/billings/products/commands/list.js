@@ -31,7 +31,6 @@ module.exports = async function (self, flags) {
     self.log(JSON.stringify(result))
     return
   default:
-    self.error('given invalid command')
-    self.exit(1)
+    self.log(JSON.stringify(result))
   }
 }
