@@ -10,7 +10,9 @@ CLI tools for Stripe
 [![License](https://img.shields.io/npm/l/fillet.svg)](https://github.com/hideokamoto/fillet/blob/master/package.json)
 
 <!-- toc -->
-* [Getting Started](#gs)
+* [Getting Started {#gs}](#getting-started-gs)
+* [use direnv](#use-direnv)
+* [directory](#directory)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
@@ -32,6 +34,7 @@ $ STRIPE_SECRET='sk_test_XXXXXXX' fillet COMMAND
 # Usage
 <!-- usage -->
 ```sh-session
+$ npm install -g fillet
 $ fillet COMMAND
 running command...
 $ fillet (-v|--version|version)
@@ -44,16 +47,43 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`fillet billing`](#fillet-billing)
+* [`fillet billing TYPE`](#fillet-billing-type)
+* [`fillet hello`](#fillet-hello)
 * [`fillet help [COMMAND]`](#fillet-help-command)
+* [`fillet init`](#fillet-init)
 
-## `fillet billing`
+## `fillet billing TYPE`
+
+Stripe Billing
+
+```
+USAGE
+  $ fillet billing TYPE
+
+ARGUMENTS
+  TYPE  products, subscriptions
+
+OPTIONS
+  -f, --force              Should replace plan or products
+  -h, --help               show CLI help
+  -n, --fileName=fileName
+  -o, --output
+  -v, --verbose            debug mode
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
+
+## `fillet hello`
 
 Describe the command here
 
 ```
 USAGE
-  $ fillet billing
+  $ fillet hello
 
 OPTIONS
   -n, --name=name  name to print
@@ -63,7 +93,7 @@ DESCRIPTION
   Extra documentation goes here
 ```
 
-_See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
+_See code: [src/commands/hello.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/hello.js)_
 
 ## `fillet help [COMMAND]`
 
@@ -81,4 +111,22 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.0/src/commands/help.ts)_
+
+## `fillet init`
+
+Describe the command here
+
+```
+USAGE
+  $ fillet init
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/init.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/init.js)_
 <!-- commandsstop -->
