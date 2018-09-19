@@ -33,8 +33,6 @@ class BillingCommand extends Command {
       this.error('given invalid command')
       this.exit(1)
     }
-    const name = flags.name || 'world'
-    this.log(`hello ${name} from /Users/dc_hideokamoto/develop/cli/fillet/src/commands/billing.js`)
   }
 }
 
