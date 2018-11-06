@@ -19,7 +19,7 @@ CLI tools for Stripe
 # Getting Started
 
 ```sh-session
-$ npm i -g fillet
+$ npm i -g @hideokamoto/fillet
 
 $ fillet init {STRIPE_SK_KEY}
 $ fillet COMMAND

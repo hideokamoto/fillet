@@ -1,0 +1,7 @@
+test/
+dev/
+.fillet/
+.circleci/
+.nyc_output/
+.eslint*
+.edirotconfig

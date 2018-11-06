@@ -1,12 +1,14 @@
 {
-  "name": "fillet",
+  "name": "@hideokamoto/fillet",
   "description": "CLI tools for Stripe ",
   "version": "0.0.0",
   "author": "hideokamoto @hideokamoto",
   "bin": {
     "fillet": "./bin/run"
   },
-  "bugs": "https://github.com/hideokamoto/fillet/issues",
+  "bugs": {
+    "url": "https://github.com/hideokamoto/fillet/issues"
+  },
   "dependencies": {
     "@oclif/command": "^1.5.0",
     "@oclif/config": "^1.7.0",
@@ -48,12 +50,18 @@
       "@oclif/plugin-help"
     ]
   },
-  "repository": "hideokamoto/fillet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hideokamoto/fillet.git"
+  },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
     "posttest": "eslint .",
     "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
     "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
     "version": "oclif-dev readme && git add README.md"
+  },
+  "directories": {
+    "test": "test"
   }
 }
