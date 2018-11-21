@@ -133,6 +133,85 @@ DESCRIPTION
 
 _See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
 
+### Product / Plan object
+You can define your plan as YAML file.
+
+```
+name: example plan
+type: service
+active: true
+statement_descriptor: hello fillet
+plans:
+  - id: my-plan
+    currency: jpy
+    interval: month
+    nickname: My Plan
+    active: true
+    amount: 15000
+id: prod_XXXXXXXXXXXXX
+```
+
+#### Create / Update a plan
+
+```
+$ fillet billing import-product -n ./product.yml
+Import product:: prod_XXXXXXXXXXXXX
+plan created:my-plan
+Finished
+```
+
+You **can not** update price / interval / currency to exists plan.
+
+```
+$ fillet billing import-product -n ./product.yml
+Import product:: prod_XXXXXXXXXXXXX
+plan: my-plan has been skipped.
+If you replace the plan, please run the command with -f / --force option
+Finished
+```
+
+
+#### Upgrade plan price
+You can use `-f` option to replace plan price.
+**-f option will delete / create plan***
+
+```
+$ fillet billing import-product -n ./product.yml -f
+Import product:: prod_XXXXXXXXXXXXX
+[Replace]: my-plan
+[Replace]:starting to delete my-plan
+plan deleted:my-plan
+[Replace]:starting to create new plan
+plan created:my-plan
+[Replace]:replace new plan: my-plan
+Finished
+```
+
+### Check plan diff
+
+You can check your plan diff between Stripe to your local YAML file.
+
+```
+$ fillet billing diff-plans -n ./product.yml
+  [
+  {
+    "active": true,
+-     "amount": 10000,
++     "amount": 15000,
+      "currency": "jpy",
+    "id": "my-plan",
+    "interval": "month",
+-     "interval_count": 1,
+-
+      "nickname": "テスト",
+-     "object": "plan",
+-
+      "product": "prod_XXXXXXXXXXXXX",
+    }
+]
+```
+
+
 ## `fillet help [COMMAND]`
 
 display help for fillet
@@ -149,3 +228,5 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.0/src/commands/help.ts)_
+
+
