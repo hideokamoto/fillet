@@ -1,232 +1,369 @@
-Fillet [WIP]
-======
+# Fillet
 
-CLI tools for Stripe 
+<p align="center">
+  <strong>Infrastructure as Code for Stripe</strong>
+</p>
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@hideokamoto/fillet.svg)](https://www.npmjs.com/package/@hideokamoto/fillet)
-[![CircleCI](https://circleci.com/gh/hideokamoto/fillet/tree/master.svg?style=shield)](https://circleci.com/gh/hideokamoto/fillet/tree/master)
-[![Downloads/week](https://img.shields.io/npm/dw/fillet.svg)](https://npmjs.org/package/@hideokamoto/fillet)
-[![License](https://img.shields.io/npm/l/@hideokamoto/fillet.svg)](https://github.com/hideokamoto/fillet/blob/master/package.json)
+<p align="center">
+  AWS CDK-like tool for managing Stripe resources with TypeScript
+</p>
 
-<!-- toc -->
-* [Getting Started](#getting-started)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Getting Started
+---
 
-```sh-session
-$ npm i -g @hideokamoto/fillet
+## Overview
 
-$ fillet init {STRIPE_SK_KEY}
-$ fillet COMMAND
+Fillet is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS CDK. It allows you to define your Stripe resources (products, prices, coupons, etc.) using TypeScript classes and deploy them with simple CLI commands.
+
+### Why Fillet?
+
+- **Type-Safe**: Define resources with TypeScript for full IDE support and compile-time checks
+- **Declarative**: Describe what you want, not how to create it
+- **Version Control**: Track changes to your Stripe infrastructure in git
+- **Reproducible**: Deploy the same configuration across multiple environments
+- **Preview Changes**: See exactly what will change before deploying
+- **Familiar DX**: If you know AWS CDK, you already know Fillet
+
+## Quick Start
+
+### Installation
+
+```bash
+# Using npm
+npm install -g @fillet/cli
+
+# Using pnpm
+pnpm add -g @fillet/cli
+
+# Using yarn
+yarn global add @fillet/cli
 ```
 
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g @hideokamoto/fillet
-$ fillet COMMAND
-running command...
-$ fillet (-v|--version|version)
-@hideokamoto/fillet/0.0.0 darwin-x64 node-v10.1.0
-$ fillet --help [COMMAND]
-USAGE
-  $ fillet COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-* [`fillet billing TYPE`](#fillet-billing-type)
-* [`fillet help [COMMAND]`](#fillet-help-command)
-* [`fillet init STRIPE`](#fillet-init-stripe)
+### Initialize a New Project
 
-## `fillet billing TYPE`
-
-Stripe Billing
-
-```
-USAGE
-  $ fillet billing TYPE
-
-ARGUMENTS
-  TYPE  products, subscriptions
-
-OPTIONS
-  -f, --force              Should replace plan or products
-  -h, --help               show CLI help
-  -n, --fileName=fileName
-  -o, --output
-  -v, --verbose            debug mode
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
+```bash
+mkdir my-stripe-infrastructure
+cd my-stripe-infrastructure
+fillet init
 ```
 
-_See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
-
-## `fillet help [COMMAND]`
-
-display help for fillet
+This creates a basic project structure:
 
 ```
-USAGE
-  $ fillet help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
+my-stripe-infrastructure/
+├── fillet.ts          # Your stack definition
+├── package.json
+├── tsconfig.json
+└── .env.example
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.0/src/commands/help.ts)_
+### Define Your Infrastructure
 
-## `fillet init STRIPE`
+Edit `fillet.ts`:
 
-Initialize fillet
+```typescript
+import { Stack } from '@fillet/core';
+import { Product, Price, Coupon } from '@fillet/constructs';
 
-```
-USAGE
-  $ fillet init STRIPE
+// Create a stack
+const stack = new Stack(undefined, 'MyStack', {
+  description: 'My Stripe Infrastructure',
+});
 
-ARGUMENTS
-  STRIPE  Stripe secret key
+// Define a product
+const product = new Product(stack, 'PremiumPlan', {
+  name: 'Premium Plan',
+  description: 'Access to all premium features',
+  active: true,
+});
 
-OPTIONS
-  -h, --help  show CLI help
+// Add monthly pricing
+new Price(stack, 'MonthlyPrice', {
+  product,
+  currency: 'usd',
+  unitAmount: 1999, // $19.99
+  recurring: {
+    interval: 'month',
+  },
+});
 
-DESCRIPTION
-  ...
-  To put Stripe secret key into .fillet/config
-  The file will be ignored from git.
-```
+// Add a promotional coupon
+new Coupon(stack, 'Launch20', {
+  name: 'Launch Discount',
+  percentOff: 20,
+  duration: 'once',
+});
 
-_See code: [src/commands/init.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/init.js)_
-<!-- commandsstop -->
-
-## `fillet billing TYPE`
-
-Stripe Billing
-
-```
-USAGE
-  $ fillet billing TYPE
-
-ARGUMENTS
-  TYPE  products, subscriptions
-
-OPTIONS
-  -f, --force              Should replace plan or products
-  -h, --help               show CLI help
-  -n, --fileName=fileName
-  -o, --output
-  -v, --verbose            debug mode
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
+export default stack;
 ```
 
-_See code: [src/commands/billing.js](https://github.com/hideokamoto/fillet/blob/v0.0.0/src/commands/billing.js)_
+### Deploy to Stripe
 
-### Product / Plan object
-You can define your plan as YAML file.
+```bash
+# Set your Stripe API key
+export STRIPE_SECRET_KEY=sk_test_...
 
-```
-name: example plan
-type: service
-active: true
-statement_descriptor: hello fillet
-plans:
-  - id: my-plan
-    currency: jpy
-    interval: month
-    nickname: My Plan
-    active: true
-    amount: 15000
-id: prod_XXXXXXXXXXXXX
+# Preview changes
+npm run diff
+
+# Deploy to Stripe
+npm run deploy
 ```
 
-#### Create / Update a plan
+## Architecture
 
-```
-$ fillet billing import-product -n ./product.yml
-Import product:: prod_XXXXXXXXXXXXX
-plan created:my-plan
-Finished
-```
+Fillet is a monorepo containing three main packages:
 
-You **can not** update price / interval / currency to exists plan.
+### 📦 `@fillet/core`
 
-```
-$ fillet billing import-product -n ./product.yml
-Import product:: prod_XXXXXXXXXXXXX
-plan: my-plan has been skipped.
-If you replace the plan, please run the command with -f / --force option
-Finished
-```
+Core IaC framework providing:
+- `Construct`: Base class for all resources
+- `Stack`: Container for resources
+- `Resource`: Base class for Stripe resources
 
+### 📦 `@fillet/constructs`
 
-#### Upgrade plan price
-You can use `-f` option to replace plan price.
-**-f option will delete / create plan***
+Stripe resource implementations:
+- `Product`: Stripe products
+- `Price`: Pricing plans (one-time, recurring, tiered, metered)
+- `Coupon`: Discount coupons
+- More coming soon (Customers, Subscriptions, PaymentLinks, etc.)
 
-```
-$ fillet billing import-product -n ./product.yml -f
-Import product:: prod_XXXXXXXXXXXXX
-[Replace]: my-plan
-[Replace]:starting to delete my-plan
-plan deleted:my-plan
-[Replace]:starting to create new plan
-plan created:my-plan
-[Replace]:replace new plan: my-plan
-Finished
-```
+### 📦 `@fillet/cli`
 
-### Check plan diff
+Command-line interface:
+- `fillet init`: Initialize a new project
+- `fillet synth`: Synthesize stack to manifest
+- `fillet diff`: Compare local vs deployed
+- `fillet deploy`: Deploy to Stripe
+- `fillet destroy`: Remove all resources
 
-You can check your plan diff between Stripe to your local YAML file.
+## CLI Commands
 
-```
-$ fillet billing diff-plans -n ./product.yml
-  [
-  {
-    "active": true,
--     "amount": 10000,
-+     "amount": 15000,
-      "currency": "jpy",
-    "id": "my-plan",
-    "interval": "month",
--     "interval_count": 1,
--
-      "nickname": "テスト",
--     "object": "plan",
--
-      "product": "prod_XXXXXXXXXXXXX",
-    }
-]
+### `fillet init`
+
+Initialize a new Fillet project with example code.
+
+```bash
+fillet init
 ```
 
+### `fillet synth`
 
-## `fillet help [COMMAND]`
+Synthesize your stack into a deployment manifest.
 
-display help for fillet
-
-```
-USAGE
-  $ fillet help [COMMAND]
-
-ARGUMENTS
-  COMMAND  command to show help for
-
-OPTIONS
-  --all  see all commands in CLI
+```bash
+fillet synth
+fillet synth --app ./custom-stack.ts
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.0/src/commands/help.ts)_
+### `fillet diff`
 
+Show differences between your local definition and what's deployed in Stripe.
 
+```bash
+fillet diff
+fillet diff --app ./custom-stack.ts
+```
+
+### `fillet deploy`
+
+Deploy your stack to Stripe.
+
+```bash
+fillet deploy
+fillet deploy --app ./custom-stack.ts
+```
+
+### `fillet destroy`
+
+Remove all resources defined in your stack from Stripe.
+
+```bash
+fillet destroy --force
+```
+
+## Available Resources
+
+### Product
+
+Define a Stripe product:
+
+```typescript
+const myProduct = new Product(stack, 'MyProduct', {
+  name: 'My Product',
+  description: 'Product description',
+  active: true,
+  images: ['https://example.com/image.png'],
+  metadata: { key: 'value' },
+  statementDescriptor: 'MY PRODUCT',
+});
+```
+
+### Price
+
+Define pricing for a product:
+
+```typescript
+// One-time payment
+new Price(stack, 'OneTime', {
+  product: myProduct,
+  currency: 'usd',
+  unitAmount: 4999, // $49.99
+});
+
+// Recurring subscription
+new Price(stack, 'Monthly', {
+  product: myProduct,
+  currency: 'usd',
+  unitAmount: 1999, // $19.99
+  recurring: {
+    interval: 'month',
+  },
+});
+
+// Tiered pricing
+new Price(stack, 'Graduated', {
+  product: myProduct,
+  currency: 'usd',
+  recurring: {
+    interval: 'month',
+    usageType: 'metered',
+  },
+  tiersMode: 'graduated',
+  tiers: [
+    { upTo: 1000, unitAmount: 10 },
+    { upTo: 10000, unitAmount: 5 },
+    { upTo: 'inf', unitAmount: 2 },
+  ],
+});
+```
+
+### Coupon
+
+Create promotional discounts:
+
+```typescript
+// Percentage discount
+new Coupon(stack, 'Sale20', {
+  percentOff: 20,
+  duration: 'once',
+  name: '20% Off',
+});
+
+// Fixed amount discount
+new Coupon(stack, 'Save10', {
+  amountOff: 1000, // $10.00
+  currency: 'usd',
+  duration: 'repeating',
+  durationInMonths: 3,
+});
+```
+
+## Examples
+
+Check out the [examples](./examples) directory for complete working examples:
+
+- **[basic-subscription](./examples/basic-subscription)**: Simple SaaS subscription with multiple tiers
+- **[advanced-pricing](./examples/advanced-pricing)**: Advanced pricing strategies (tiered, metered, per-seat)
+
+## Development
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/hideokamoto/fillet.git
+cd fillet
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+```
+
+### Project Structure
+
+```
+fillet/
+├── packages/
+│   ├── core/          # Core IaC framework
+│   ├── constructs/    # Stripe resource constructs
+│   └── cli/           # Command-line interface
+├── examples/
+│   ├── basic-subscription/
+│   └── advanced-pricing/
+├── pnpm-workspace.yaml
+└── package.json
+```
+
+### Building
+
+```bash
+# Build all packages
+pnpm build
+
+# Build specific package
+cd packages/core
+pnpm build
+```
+
+### Testing
+
+```bash
+# Run tests for all packages
+pnpm test
+
+# Run tests for specific package
+cd packages/constructs
+pnpm test
+```
+
+## Roadmap
+
+### v0.2.0
+- [ ] Customer resource
+- [ ] Subscription resource
+- [ ] PaymentLink resource
+- [ ] State management (track deployed resources)
+
+### v0.3.0
+- [ ] Webhook configuration
+- [ ] Tax rate management
+- [ ] Shipping rate management
+- [ ] Multi-stack support
+
+### v1.0.0
+- [ ] Full Stripe API coverage
+- [ ] Import existing resources
+- [ ] Stack dependencies
+- [ ] Custom constructs / patterns
+
+## Comparison with Other Tools
+
+| Feature | Fillet | YAML/JSON | Terraform | Manual |
+|---------|--------|-----------|-----------|--------|
+| Type Safety | ✅ | ❌ | ⚠️ | ❌ |
+| IDE Support | ✅ | ⚠️ | ⚠️ | N/A |
+| Diff Preview | ✅ | ❌ | ✅ | ❌ |
+| Version Control | ✅ | ✅ | ✅ | ❌ |
+| Programmatic | ✅ | ❌ | ⚠️ | ✅ |
+| Stripe-Native | ✅ | ✅ | ❌ | ✅ |
+
+## Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details.
+
+## License
+
+MIT License - see [LICENSE](./LICENSE) for details.
+
+## Credits
+
+Inspired by [AWS CDK](https://aws.amazon.com/cdk/) and the amazing work by the AWS team.
+
+---
+
+<p align="center">
+  Made with ❤️ for the Stripe developer community
+</p>
