@@ -1,12 +1,6 @@
 import { Command, Flags } from '@oclif/core';
 import * as path from 'path';
 import * as fs from 'fs';
-import { register } from 'esbuild-register/dist/node';
-
-// Register esbuild to transpile TypeScript files on the fly
-register({
-  target: 'node18',
-});
 
 export default class Synth extends Command {
   static description = 'Synthesize the stack definition into a deployable manifest';

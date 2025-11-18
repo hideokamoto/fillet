@@ -4,12 +4,6 @@ import * as fs from 'fs';
 import chalk from 'chalk';
 import { StripeDeployer } from '../engine/deployer';
 import { StackManifest } from '@fillet/core';
-import { register } from 'esbuild-register/dist/node';
-
-// Register esbuild to transpile TypeScript files on the fly
-register({
-  target: 'node18',
-});
 
 export default class Destroy extends Command {
   static description = 'Destroy all resources in the stack';

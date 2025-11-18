@@ -5,12 +5,6 @@ import chalk from 'chalk';
 import { createTwoFilesPatch } from 'diff';
 import Stripe from 'stripe';
 import { StackManifest } from '@fillet/core';
-import { register } from 'esbuild-register/dist/node';
-
-// Register esbuild to transpile TypeScript files on the fly
-register({
-  target: 'node18',
-});
 
 export default class Diff extends Command {
   static description = 'Compare the deployed stack with the local definition';
