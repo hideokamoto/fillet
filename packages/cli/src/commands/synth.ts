@@ -1,6 +1,12 @@
 import { Command, Flags } from '@oclif/core';
 import * as path from 'path';
 import * as fs from 'fs';
+import { register } from 'esbuild-register/dist/node';
+
+// Register esbuild to transpile TypeScript files on the fly
+const { unregister } = register({
+  target: 'node18',
+});
 
 export default class Synth extends Command {
   static description = 'Synthesize the stack definition into a deployable manifest';
@@ -30,8 +36,10 @@ export default class Synth extends Command {
 
     const appPath = path.resolve(process.cwd(), flags.app);
 
+    // Pre-flight checks outside try block to preserve error messages
     if (!fs.existsSync(appPath)) {
       this.error(`App file not found: ${appPath}`);
+      return;
     }
 
     try {
@@ -40,7 +48,8 @@ export default class Synth extends Command {
       const stack = appModule.default || appModule.stack || appModule;
 
       if (!stack || typeof stack.synth !== 'function') {
-        this.error('App must export a Stack instance with a synth() method');
+        this.error('App must export a Stack instance with a synth() method', { exit: 1 });
+        return;
       }
 
       const manifest = stack.synth();

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "test": "jest",
     "lint": "eslint src --ext .ts"
   },
@@ -22,7 +22,8 @@
     "@oclif/plugin-help": "^6.0.9",
     "stripe": "^14.9.0",
     "chalk": "^4.1.2",
-    "diff": "^5.1.0"
+    "diff": "^5.1.0",
+    "esbuild-register": "^3.5.0"
   },
   "devDependencies": {
     "@oclif/test": "^3.1.3",

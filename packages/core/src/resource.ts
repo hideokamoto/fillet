@@ -28,7 +28,17 @@ export abstract class Resource extends Construct {
     this.physicalId = props.physicalId;
     this.stack = this.findStack();
 
-    // Register resource metadata
+    // Note: Resource metadata registration is deferred to subclasses
+    // to ensure all properties are initialized before synthesizeProperties() is called.
+    // Subclasses should call registerResourceMetadata() at the end of their constructor.
+  }
+
+  /**
+   * Register this resource's metadata.
+   * Subclasses should call this method at the end of their constructor
+   * after all properties have been initialized.
+   */
+  protected registerResourceMetadata(): void {
     this.node.addMetadata('resource', {
       type: this.resourceType,
       properties: this.synthesizeProperties(),

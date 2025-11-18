@@ -45,9 +45,12 @@ export default class Init extends Command {
           deploy: 'fillet deploy',
           diff: 'fillet diff',
         },
+        dependencies: {
+          '@fillet/core': '^0.1.0',
+          '@fillet/constructs': '^0.1.0',
+        },
         devDependencies: {
           '@fillet/cli': '^0.1.0',
-          '@fillet/constructs': '^0.1.0',
           '@types/node': '^20.10.0',
           typescript: '^5.3.3',
         },
@@ -149,7 +152,6 @@ node_modules/
 dist/
 *.js
 *.d.ts
-!bin/*.js
 `.trim();
 
     if (!fs.existsSync(gitignorePath)) {

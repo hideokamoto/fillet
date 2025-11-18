@@ -157,6 +157,9 @@ export class Price extends Resource {
     this.transformQuantity = props.transformQuantity;
     this.tiersMode = props.tiersMode;
     this.tiers = props.tiers;
+
+    // Register resource metadata after all properties are initialized
+    this.registerResourceMetadata();
   }
 
   protected get resourceType(): string {
@@ -171,14 +174,21 @@ export class Price extends Resource {
     };
 
     if (this.unitAmount !== undefined) params.unit_amount = this.unitAmount;
-    if (this.unitAmountDecimal) params.unit_amount_decimal = this.unitAmountDecimal;
-    if (this.nickname) params.nickname = this.nickname;
-    if (this.metadata) params.metadata = this.metadata;
-    if (this.lookupKey) params.lookup_key = this.lookupKey;
-    if (this.transformQuantity) params.transform_quantity = this.transformQuantity;
-    if (this.tiersMode) params.tiers_mode = this.tiersMode;
+    if (this.unitAmountDecimal !== undefined) params.unit_amount_decimal = this.unitAmountDecimal;
+    if (this.nickname !== undefined) params.nickname = this.nickname;
+    if (this.metadata !== undefined) params.metadata = this.metadata;
+    if (this.lookupKey !== undefined) params.lookup_key = this.lookupKey;
+    if (this.tiersMode !== undefined) params.tiers_mode = this.tiersMode;
 
-    if (this.recurring) {
+    // Transform quantity - convert camelCase to snake_case for Stripe API
+    if (this.transformQuantity !== undefined) {
+      params.transform_quantity = {
+        divide_by: this.transformQuantity.divideBy,
+        round: this.transformQuantity.round,
+      };
+    }
+
+    if (this.recurring !== undefined) {
       params.recurring = {
         interval: this.recurring.interval,
         interval_count: this.recurring.intervalCount,
@@ -187,7 +197,9 @@ export class Price extends Resource {
       };
     }
 
-    if (this.tiers) {
+    if (this.tiers !== undefined) {
+      // When tiers are present, billing_scheme must be 'tiered'
+      params.billing_scheme = 'tiered';
       params.tiers = this.tiers.map(tier => ({
         up_to: tier.upTo,
         unit_amount: tier.unitAmount,
