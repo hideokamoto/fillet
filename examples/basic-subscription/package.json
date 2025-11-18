@@ -1,0 +1,22 @@
+{
+  "name": "@fillet/example-basic-subscription",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Basic subscription example for Fillet",
+  "scripts": {
+    "build": "tsc",
+    "synth": "fillet synth",
+    "deploy": "fillet deploy",
+    "diff": "fillet diff",
+    "destroy": "fillet destroy"
+  },
+  "dependencies": {
+    "@fillet/cli": "workspace:*",
+    "@fillet/constructs": "workspace:*",
+    "@fillet/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}

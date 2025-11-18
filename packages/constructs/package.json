@@ -1,0 +1,23 @@
+{
+  "name": "@fillet/constructs",
+  "version": "0.1.0",
+  "description": "Stripe resource constructs for Fillet",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "lint": "eslint src --ext .ts"
+  },
+  "keywords": ["stripe", "iac", "constructs"],
+  "license": "MIT",
+  "dependencies": {
+    "@fillet/core": "workspace:*",
+    "stripe": "^14.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}

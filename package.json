@@ -1,67 +1,31 @@
 {
-  "name": "@hideokamoto/fillet",
-  "description": "CLI tools for Stripe ",
-  "version": "0.0.0",
-  "author": "hideokamoto @hideokamoto",
-  "bin": {
-    "fillet": "./bin/run"
-  },
-  "bugs": {
-    "url": "https://github.com/hideokamoto/fillet/issues"
-  },
-  "dependencies": {
-    "@oclif/command": "^1.5.0",
-    "@oclif/config": "^1.7.0",
-    "@oclif/plugin-help": "^2.1.0",
-    "chalk": "^2.4.1",
-    "diff": "^3.5.0",
-    "js-yaml": "^3.12.0",
-    "stripe": "^6.7.0"
+  "name": "@fillet/monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Infrastructure as Code for Stripe - AWS CDK-like tool for managing Stripe resources",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1.17.0",
-    "@oclif/test": "^1.2.0",
-    "chai": "^4.1.2",
-    "eslint": "^5.4.0",
-    "eslint-config-oclif": "^3.0.0",
-    "globby": "^8.0.1",
-    "mocha": "^5.2.0",
-    "nyc": "^12.0.2"
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "prettier": "^3.1.0",
+    "eslint": "^8.55.0"
   },
   "engines": {
-    "node": ">=8.3.0"
-  },
-  "files": [
-    "/bin",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json",
-    "/src"
-  ],
-  "homepage": "https://github.com/hideokamoto/fillet",
-  "keywords": [
-    "oclif"
-  ],
-  "license": "MIT",
-  "main": "src/index.js",
-  "oclif": {
-    "commands": "./src/commands",
-    "bin": "fillet",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hideokamoto/fillet.git"
   },
-  "scripts": {
-    "postpack": "rm -f oclif.manifest.json npm-shrinkwrap.json",
-    "posttest": "eslint .",
-    "prepack": "oclif-dev manifest && oclif-dev readme && npm shrinkwrap",
-    "test": "nyc mocha --forbid-only \"test/**/*.test.js\"",
-    "version": "oclif-dev readme && git add README.md"
-  },
-  "directories": {
-    "test": "test"
-  }
+  "license": "MIT"
 }
