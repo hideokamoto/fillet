@@ -1,5 +1,5 @@
-import { Stack } from '@fillet/core';
-import { Product, Price } from '@fillet/constructs';
+import { Stack } from '@pricectl/core';
+import { Product, Price } from '@pricectl/constructs';
 
 /**
  * Advanced Pricing Example

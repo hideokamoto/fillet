@@ -1,7 +1,7 @@
 {
-  "name": "@fillet/core",
+  "name": "@pricectl/core",
   "version": "0.1.0",
-  "description": "Core IaC library for Fillet - Stripe Infrastructure as Code",
+  "description": "Core IaC library for pricectl",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

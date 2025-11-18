@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const cliPackageJson = require('../../package.json');
 
 export default class Init extends Command {
-  static description = 'Initialize a new Fillet project';
+  static description = 'Initialize a new pricectl project';
 
   static examples = [
     '<%= config.bin %> <%= command.id %>',
@@ -30,7 +30,7 @@ export default class Init extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Init);
 
-    this.log('Initializing Fillet project...');
+    this.log('Initializing pricectl project...');
     this.log('');
 
     const cwd = process.cwd();
@@ -38,8 +38,8 @@ export default class Init extends Command {
     // Create package.json if it doesn't exist
     const packageJsonPath = path.join(cwd, 'package.json');
     if (!fs.existsSync(packageJsonPath)) {
-      // Use the CLI's version for all @fillet/* packages to ensure compatibility
-      const filletVersion = `^${cliPackageJson.version}`;
+      // Use the CLI's version for all @pricectl/* packages to ensure compatibility
+      const pricectlVersion = `^${cliPackageJson.version}`;
 
       const packageJson = {
         name: path.basename(cwd),
@@ -47,16 +47,16 @@ export default class Init extends Command {
         private: true,
         scripts: {
           build: 'tsc',
-          synth: 'fillet synth',
-          deploy: 'fillet deploy',
-          diff: 'fillet diff',
+          synth: 'pricectl synth',
+          deploy: 'pricectl deploy',
+          diff: 'pricectl diff',
         },
         dependencies: {
-          '@fillet/core': filletVersion,
-          '@fillet/constructs': filletVersion,
+          '@pricectl/core': pricectlVersion,
+          '@pricectl/constructs': pricectlVersion,
         },
         devDependencies: {
-          '@fillet/cli': filletVersion,
+          '@pricectl/cli': pricectlVersion,
           '@types/node': '^20.10.0',
           typescript: '^5.3.3',
         },
@@ -88,11 +88,11 @@ export default class Init extends Command {
       this.log(chalk.green('✓ Created tsconfig.json'));
     }
 
-    // Create example fillet.ts
-    const filletTsPath = path.join(cwd, 'fillet.ts');
-    if (!fs.existsSync(filletTsPath) || flags.force) {
-      const example = `import { Stack } from '@fillet/core';
-import { Product, Price, Coupon } from '@fillet/constructs';
+    // Create example pricectl.ts
+    const pricectlTsPath = path.join(cwd, 'pricectl.ts');
+    if (!fs.existsSync(pricectlTsPath) || flags.force) {
+      const example = `import { Stack } from '@pricectl/core';
+import { Product, Price, Coupon } from '@pricectl/constructs';
 
 // Create a new stack
 const stack = new Stack(undefined, 'MyStack', {
@@ -138,8 +138,8 @@ new Coupon(stack, 'WelcomeCoupon', {
 export default stack;
 `;
 
-      fs.writeFileSync(filletTsPath, example);
-      this.log(chalk.green('✓ Created fillet.ts'));
+      fs.writeFileSync(pricectlTsPath, example);
+      this.log(chalk.green('✓ Created pricectl.ts'));
     }
 
     // Create .env.example
@@ -153,7 +153,7 @@ export default stack;
     const gitignorePath = path.join(cwd, '.gitignore');
     const gitignoreContent = `
 .env
-fillet.out/
+pricectl.out/
 node_modules/
 dist/
 *.js
@@ -165,7 +165,7 @@ dist/
       this.log(chalk.green('✓ Created .gitignore'));
     } else if (flags.force) {
       const existing = fs.readFileSync(gitignorePath, 'utf-8');
-      if (!existing.includes('fillet.out/')) {
+      if (!existing.includes('pricectl.out/')) {
         fs.appendFileSync(gitignorePath, '\n' + gitignoreContent + '\n');
         this.log(chalk.green('✓ Updated .gitignore'));
       }

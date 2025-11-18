@@ -101,4 +101,4 @@ $5.00 per 100 items (rounded up)
 
 ## Learn More
 
-See the [main documentation](../../README.md) for more information about Fillet.
+See the [main documentation](../../README.md) for more information about pricectl.

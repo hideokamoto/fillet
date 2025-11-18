@@ -1,7 +1,7 @@
 {
-  "name": "@fillet/constructs",
+  "name": "@pricectl/constructs",
   "version": "0.1.0",
-  "description": "Stripe resource constructs for Fillet",
+  "description": "Stripe pricing resource constructs for pricectl",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -13,7 +13,7 @@
   "keywords": ["stripe", "iac", "constructs"],
   "license": "MIT",
   "dependencies": {
-    "@fillet/core": "workspace:*",
+    "@pricectl/core": "workspace:*",
     "stripe": "^14.9.0"
   },
   "devDependencies": {}

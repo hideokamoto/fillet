@@ -1,19 +1,19 @@
 {
-  "name": "@fillet/example-basic-subscription",
+  "name": "@pricectl/example-basic-subscription",
   "version": "0.1.0",
   "private": true,
-  "description": "Basic subscription example for Fillet",
+  "description": "Basic subscription example for pricectl",
   "scripts": {
     "build": "tsc",
-    "synth": "fillet synth",
-    "deploy": "fillet deploy",
-    "diff": "fillet diff",
-    "destroy": "fillet destroy"
+    "synth": "pricectl synth",
+    "deploy": "pricectl deploy",
+    "diff": "pricectl diff",
+    "destroy": "pricectl destroy"
   },
   "dependencies": {
-    "@fillet/cli": "workspace:*",
-    "@fillet/constructs": "workspace:*",
-    "@fillet/core": "workspace:*"
+    "@pricectl/cli": "workspace:*",
+    "@pricectl/constructs": "workspace:*",
+    "@pricectl/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

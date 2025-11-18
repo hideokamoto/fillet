@@ -1,5 +1,5 @@
-import { Stack } from '@fillet/core';
-import { Product, Price, Coupon } from '@fillet/constructs';
+import { Stack } from '@pricectl/core';
+import { Product, Price, Coupon } from '@pricectl/constructs';
 
 /**
  * Basic Subscription Example
