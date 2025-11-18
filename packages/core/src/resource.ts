@@ -59,8 +59,13 @@ export abstract class Resource extends Construct {
    * Find the Stack this resource belongs to
    */
   private findStack(): Stack {
-    let scope: Construct | undefined = this;
+    // Check if this resource itself is a stack (shouldn't happen, but check anyway)
+    if (this instanceof Stack) {
+      return this;
+    }
 
+    // Walk up the construct tree to find a Stack
+    let scope: Construct | undefined = this.node.scope;
     while (scope) {
       if (scope instanceof Stack) {
         return scope;

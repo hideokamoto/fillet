@@ -158,7 +158,7 @@ export default class Diff extends Command {
         if (resource.tax_code !== undefined) normalized.tax_code = resource.tax_code;
         // Exclude fillet metadata from comparison
         if (resource.metadata) {
-          const { fillet_id, fillet_path, ...userMetadata } = resource.metadata;
+          const { fillet_id: _fid, fillet_path: _fpath, ...userMetadata } = resource.metadata;
           if (Object.keys(userMetadata).length > 0) {
             normalized.metadata = userMetadata;
           }
@@ -215,7 +215,7 @@ export default class Diff extends Command {
 
         // Exclude fillet metadata from comparison
         if (resource.metadata) {
-          const { fillet_id, fillet_path, ...userMetadata } = resource.metadata;
+          const { fillet_id: _fid, fillet_path: _fpath, ...userMetadata } = resource.metadata;
           if (Object.keys(userMetadata).length > 0) {
             normalized.metadata = userMetadata;
           }
