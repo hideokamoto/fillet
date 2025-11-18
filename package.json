@@ -1,8 +1,8 @@
 {
-  "name": "@fillet/monorepo",
+  "name": "@stripe-rdk/monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Infrastructure as Code for Stripe - AWS CDK-like tool for managing Stripe resources",
+  "description": "Stripe Revenue Development Kit (RDK) - Infrastructure as Code for Stripe resources",
   "workspaces": [
     "packages/*",
     "examples/*"

@@ -1,19 +1,19 @@
 {
-  "name": "@fillet/example-advanced-pricing",
+  "name": "@stripe-rdk/example-advanced-pricing",
   "version": "0.1.0",
   "private": true,
-  "description": "Advanced pricing example with tiered and metered billing",
+  "description": "Advanced pricing example with tiered and metered billing for Stripe RDK",
   "scripts": {
     "build": "tsc",
-    "synth": "fillet synth",
-    "deploy": "fillet deploy",
-    "diff": "fillet diff",
-    "destroy": "fillet destroy"
+    "synth": "stripe-rdk synth",
+    "deploy": "stripe-rdk deploy",
+    "diff": "stripe-rdk diff",
+    "destroy": "stripe-rdk destroy"
   },
   "dependencies": {
-    "@fillet/cli": "workspace:*",
-    "@fillet/constructs": "workspace:*",
-    "@fillet/core": "workspace:*"
+    "@stripe-rdk/cli": "workspace:*",
+    "@stripe-rdk/constructs": "workspace:*",
+    "@stripe-rdk/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

@@ -1,5 +1,5 @@
-import { Stack } from '@fillet/core';
-import { Product, Price, Coupon } from '@fillet/constructs';
+import { Stack } from '@stripe-rdk/core';
+import { Product, Price, Coupon } from '@stripe-rdk/constructs';
 
 /**
  * Basic Subscription Example

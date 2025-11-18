@@ -1,7 +1,7 @@
 {
-  "name": "@fillet/core",
+  "name": "@stripe-rdk/core",
   "version": "0.1.0",
-  "description": "Core IaC library for Fillet - Stripe Infrastructure as Code",
+  "description": "Core IaC library for Stripe RDK (Revenue Development Kit)",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

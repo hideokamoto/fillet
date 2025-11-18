@@ -1,6 +1,6 @@
-# Contributing to Fillet
+# Contributing to Stripe RDK
 
-Thank you for your interest in contributing to Fillet! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Stripe RDK! This document provides guidelines and information for contributors.
 
 ## Getting Started
 
@@ -34,7 +34,7 @@ Thank you for your interest in contributing to Fillet! This document provides gu
 ### Project Structure
 
 ```
-fillet/
+stripe-rdk/
 ├── packages/
 │   ├── core/          # Core IaC framework
 │   ├── constructs/    # Stripe resource constructs
@@ -73,7 +73,7 @@ To add support for a new Stripe resource:
 1. Create a new file in `packages/constructs/src/`:
    ```typescript
    // packages/constructs/src/webhook-endpoint.ts
-   import { Construct, Resource, ResourceProps } from '@fillet/core';
+   import { Construct, Resource, ResourceProps } from '@stripe-rdk/core';
    import type Stripe from 'stripe';
 
    export interface WebhookEndpointProps extends ResourceProps {
@@ -149,7 +149,7 @@ Use conventional commits format:
 
 ## Adding Examples
 
-Examples help users understand how to use Fillet:
+Examples help users understand how to use Stripe RDK:
 
 1. Create a new directory in `examples/`
 2. Add a complete working example
@@ -166,4 +166,4 @@ Examples help users understand how to use Fillet:
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
 
-Thank you for contributing to Fillet! 🎉
+Thank you for contributing to Stripe RDK!

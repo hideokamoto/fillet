@@ -1,5 +1,5 @@
-import { Stack } from '@fillet/core';
-import { Product, Price } from '@fillet/constructs';
+import { Stack } from '@stripe-rdk/core';
+import { Product, Price } from '@stripe-rdk/constructs';
 
 /**
  * Advanced Pricing Example

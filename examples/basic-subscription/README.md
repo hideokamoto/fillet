@@ -1,6 +1,6 @@
 # Basic Subscription Example
 
-This example demonstrates how to create a simple SaaS subscription infrastructure using Fillet.
+This example demonstrates how to create a simple SaaS subscription infrastructure using Stripe RDK.
 
 ## What's Included
 
@@ -11,7 +11,7 @@ This example demonstrates how to create a simple SaaS subscription infrastructur
 ## Project Structure
 
 ```
-├── fillet.ts          # Stack definition
+├── stripe-rdk.ts      # Stack definition
 ├── package.json       # Project dependencies
 └── tsconfig.json      # TypeScript configuration
 ```
@@ -64,7 +64,7 @@ This example demonstrates how to create a simple SaaS subscription infrastructur
 
 ## Customization
 
-Edit `fillet.ts` to:
+Edit `stripe-rdk.ts` to:
 - Add or remove pricing tiers
 - Change pricing amounts
 - Create new promotional campaigns
@@ -72,4 +72,4 @@ Edit `fillet.ts` to:
 
 ## Learn More
 
-See the [main documentation](../../README.md) for more information about Fillet.
+See the [main documentation](../../README.md) for more information about Stripe RDK.

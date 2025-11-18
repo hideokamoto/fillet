@@ -1,4 +1,4 @@
-# Fillet
+# Stripe RDK (Revenue Development Kit)
 
 <p align="center">
   <strong>Infrastructure as Code for Stripe</strong>
@@ -12,16 +12,16 @@
 
 ## Overview
 
-Fillet is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS CDK. It allows you to define your Stripe resources (products, prices, coupons, etc.) using TypeScript classes and deploy them with simple CLI commands.
+Stripe RDK is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS CDK. It allows you to define your Stripe resources (products, prices, coupons, etc.) using TypeScript classes and deploy them with simple CLI commands.
 
-### Why Fillet?
+### Why Stripe RDK?
 
 - **Type-Safe**: Define resources with TypeScript for full IDE support and compile-time checks
 - **Declarative**: Describe what you want, not how to create it
 - **Version Control**: Track changes to your Stripe infrastructure in git
 - **Reproducible**: Deploy the same configuration across multiple environments
 - **Preview Changes**: See exactly what will change before deploying
-- **Familiar DX**: If you know AWS CDK, you already know Fillet
+- **Familiar DX**: If you know AWS CDK, you already know Stripe RDK
 
 ## Quick Start
 
@@ -29,13 +29,13 @@ Fillet is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS CDK. 
 
 ```bash
 # Using npm
-npm install -g @fillet/cli
+npm install -g @stripe-rdk/cli
 
 # Using pnpm
-pnpm add -g @fillet/cli
+pnpm add -g @stripe-rdk/cli
 
 # Using yarn
-yarn global add @fillet/cli
+yarn global add @stripe-rdk/cli
 ```
 
 ### Initialize a New Project
@@ -43,14 +43,14 @@ yarn global add @fillet/cli
 ```bash
 mkdir my-stripe-infrastructure
 cd my-stripe-infrastructure
-fillet init
+stripe-rdk init
 ```
 
 This creates a basic project structure:
 
 ```
 my-stripe-infrastructure/
-├── fillet.ts          # Your stack definition
+├── stripe-rdk.ts      # Your stack definition
 ├── package.json
 ├── tsconfig.json
 └── .env.example
@@ -58,11 +58,11 @@ my-stripe-infrastructure/
 
 ### Define Your Infrastructure
 
-Edit `fillet.ts`:
+Edit `stripe-rdk.ts`:
 
 ```typescript
-import { Stack } from '@fillet/core';
-import { Product, Price, Coupon } from '@fillet/constructs';
+import { Stack } from '@stripe-rdk/core';
+import { Product, Price, Coupon } from '@stripe-rdk/constructs';
 
 // Create a stack
 const stack = new Stack(undefined, 'MyStack', {
@@ -111,16 +111,16 @@ npm run deploy
 
 ## Architecture
 
-Fillet is a monorepo containing three main packages:
+Stripe RDK is a monorepo containing three main packages:
 
-### 📦 `@fillet/core`
+### 📦 `@stripe-rdk/core`
 
 Core IaC framework providing:
 - `Construct`: Base class for all resources
 - `Stack`: Container for resources
 - `Resource`: Base class for Stripe resources
 
-### 📦 `@fillet/constructs`
+### 📦 `@stripe-rdk/constructs`
 
 Stripe resource implementations:
 - `Product`: Stripe products
@@ -128,58 +128,58 @@ Stripe resource implementations:
 - `Coupon`: Discount coupons
 - More coming soon (Customers, Subscriptions, PaymentLinks, etc.)
 
-### 📦 `@fillet/cli`
+### 📦 `@stripe-rdk/cli`
 
 Command-line interface:
-- `fillet init`: Initialize a new project
-- `fillet synth`: Synthesize stack to manifest
-- `fillet diff`: Compare local vs deployed
-- `fillet deploy`: Deploy to Stripe
-- `fillet destroy`: Remove all resources
+- `stripe-rdk init`: Initialize a new project
+- `stripe-rdk synth`: Synthesize stack to manifest
+- `stripe-rdk diff`: Compare local vs deployed
+- `stripe-rdk deploy`: Deploy to Stripe
+- `stripe-rdk destroy`: Remove all resources
 
 ## CLI Commands
 
-### `fillet init`
+### `stripe-rdk init`
 
-Initialize a new Fillet project with example code.
+Initialize a new Stripe RDK project with example code.
 
 ```bash
-fillet init
+stripe-rdk init
 ```
 
-### `fillet synth`
+### `stripe-rdk synth`
 
 Synthesize your stack into a deployment manifest.
 
 ```bash
-fillet synth
-fillet synth --app ./custom-stack.ts
+stripe-rdk synth
+stripe-rdk synth --app ./custom-stack.ts
 ```
 
-### `fillet diff`
+### `stripe-rdk diff`
 
 Show differences between your local definition and what's deployed in Stripe.
 
 ```bash
-fillet diff
-fillet diff --app ./custom-stack.ts
+stripe-rdk diff
+stripe-rdk diff --app ./custom-stack.ts
 ```
 
-### `fillet deploy`
+### `stripe-rdk deploy`
 
 Deploy your stack to Stripe.
 
 ```bash
-fillet deploy
-fillet deploy --app ./custom-stack.ts
+stripe-rdk deploy
+stripe-rdk deploy --app ./custom-stack.ts
 ```
 
-### `fillet destroy`
+### `stripe-rdk destroy`
 
 Remove all resources defined in your stack from Stripe.
 
 ```bash
-fillet destroy --force
+stripe-rdk destroy --force
 ```
 
 ## Available Resources
@@ -285,7 +285,7 @@ pnpm build
 ### Project Structure
 
 ```
-fillet/
+stripe-rdk/
 ├── packages/
 │   ├── core/          # Core IaC framework
 │   ├── constructs/    # Stripe resource constructs
@@ -341,8 +341,8 @@ pnpm test
 
 ## Comparison with Other Tools
 
-| Feature | Fillet | YAML/JSON | Terraform | Manual |
-|---------|--------|-----------|-----------|--------|
+| Feature | Stripe RDK | YAML/JSON | Terraform | Manual |
+|---------|------------|-----------|-----------|--------|
 | Type Safety | ✅ | ❌ | ⚠️ | ❌ |
 | IDE Support | ✅ | ⚠️ | ⚠️ | N/A |
 | Diff Preview | ✅ | ❌ | ✅ | ❌ |

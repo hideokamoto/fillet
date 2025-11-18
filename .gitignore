@@ -5,7 +5,7 @@ node_modules/
 # Build outputs
 dist/
 *.tsbuildinfo
-fillet.out/
+stripe-rdk.out/
 
 # IDE
 .vscode/
@@ -38,6 +38,6 @@ coverage/
 /tmp
 
 # Misc
-.fillet/
+.stripe-rdk/
 /yarn.lock
 dev/
