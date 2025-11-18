@@ -96,18 +96,23 @@ export class Coupon extends Resource {
     this.redeemBy = props.redeemBy;
     this.appliesTo = props.appliesTo;
 
-    // Validation
-    if (!this.amountOff && !this.percentOff) {
-      throw new Error('Either amountOff or percentOff must be specified');
+    // Validation: Exactly one of amountOff or percentOff must be provided (XOR)
+    const hasAmountOff = this.amountOff !== undefined;
+    const hasPercentOff = this.percentOff !== undefined;
+    if (hasAmountOff === hasPercentOff) {
+      throw new Error('Exactly one of amountOff or percentOff must be specified');
     }
 
-    if (this.duration === 'repeating' && !this.durationInMonths) {
+    if (this.duration === 'repeating' && this.durationInMonths === undefined) {
       throw new Error('durationInMonths is required when duration is "repeating"');
     }
 
-    if (this.amountOff && !this.currency) {
+    if (this.amountOff !== undefined && this.currency === undefined) {
       throw new Error('currency is required when amountOff is specified');
     }
+
+    // Register resource metadata after all properties are initialized
+    this.registerResourceMetadata();
   }
 
   protected get resourceType(): string {
@@ -119,15 +124,15 @@ export class Coupon extends Resource {
       duration: this.duration,
     };
 
-    if (this.amountOff) params.amount_off = this.amountOff;
-    if (this.currency) params.currency = this.currency;
-    if (this.percentOff) params.percent_off = this.percentOff;
-    if (this.durationInMonths) params.duration_in_months = this.durationInMonths;
-    if (this.maxRedemptions) params.max_redemptions = this.maxRedemptions;
-    if (this.metadata) params.metadata = this.metadata;
-    if (this.name) params.name = this.name;
-    if (this.redeemBy) params.redeem_by = this.redeemBy;
-    if (this.appliesTo) params.applies_to = this.appliesTo;
+    if (this.amountOff !== undefined) params.amount_off = this.amountOff;
+    if (this.currency !== undefined) params.currency = this.currency;
+    if (this.percentOff !== undefined) params.percent_off = this.percentOff;
+    if (this.durationInMonths !== undefined) params.duration_in_months = this.durationInMonths;
+    if (this.maxRedemptions !== undefined) params.max_redemptions = this.maxRedemptions;
+    if (this.metadata !== undefined) params.metadata = this.metadata;
+    if (this.name !== undefined) params.name = this.name;
+    if (this.redeemBy !== undefined) params.redeem_by = this.redeemBy;
+    if (this.appliesTo !== undefined) params.applies_to = this.appliesTo;
 
     return params;
   }

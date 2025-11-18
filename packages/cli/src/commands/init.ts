@@ -3,6 +3,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import chalk from 'chalk';
 
+// Import CLI package.json to get current version
+const cliPackageJson = require('../../package.json');
+
 export default class Init extends Command {
   static description = 'Initialize a new Fillet project';
 
@@ -35,6 +38,9 @@ export default class Init extends Command {
     // Create package.json if it doesn't exist
     const packageJsonPath = path.join(cwd, 'package.json');
     if (!fs.existsSync(packageJsonPath)) {
+      // Use the CLI's version for all @fillet/* packages to ensure compatibility
+      const filletVersion = `^${cliPackageJson.version}`;
+
       const packageJson = {
         name: path.basename(cwd),
         version: '0.1.0',
@@ -45,9 +51,12 @@ export default class Init extends Command {
           deploy: 'fillet deploy',
           diff: 'fillet diff',
         },
+        dependencies: {
+          '@fillet/core': filletVersion,
+          '@fillet/constructs': filletVersion,
+        },
         devDependencies: {
-          '@fillet/cli': '^0.1.0',
-          '@fillet/constructs': '^0.1.0',
+          '@fillet/cli': filletVersion,
           '@types/node': '^20.10.0',
           typescript: '^5.3.3',
         },
@@ -149,7 +158,6 @@ node_modules/
 dist/
 *.js
 *.d.ts
-!bin/*.js
 `.trim();
 
     if (!fs.existsSync(gitignorePath)) {

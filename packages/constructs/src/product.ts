@@ -84,6 +84,9 @@ export class Product extends Resource {
     this.unitLabel = props.unitLabel;
     this.statementDescriptor = props.statementDescriptor;
     this.taxCode = props.taxCode;
+
+    // Register resource metadata after all properties are initialized
+    this.registerResourceMetadata();
   }
 
   protected get resourceType(): string {
@@ -96,13 +99,13 @@ export class Product extends Resource {
       active: this.active,
     };
 
-    if (this.description) params.description = this.description;
-    if (this.images) params.images = this.images;
-    if (this.metadata) params.metadata = this.metadata;
-    if (this.url) params.url = this.url;
-    if (this.unitLabel) params.unit_label = this.unitLabel;
-    if (this.statementDescriptor) params.statement_descriptor = this.statementDescriptor;
-    if (this.taxCode) params.tax_code = this.taxCode;
+    if (this.description !== undefined) params.description = this.description;
+    if (this.images !== undefined) params.images = this.images;
+    if (this.metadata !== undefined) params.metadata = this.metadata;
+    if (this.url !== undefined) params.url = this.url;
+    if (this.unitLabel !== undefined) params.unit_label = this.unitLabel;
+    if (this.statementDescriptor !== undefined) params.statement_descriptor = this.statementDescriptor;
+    if (this.taxCode !== undefined) params.tax_code = this.taxCode;
 
     return params;
   }

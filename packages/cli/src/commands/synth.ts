@@ -30,8 +30,9 @@ export default class Synth extends Command {
 
     const appPath = path.resolve(process.cwd(), flags.app);
 
+    // Pre-flight checks outside try block to preserve error messages
     if (!fs.existsSync(appPath)) {
-      this.error(`App file not found: ${appPath}`);
+      this.error(`App file not found: ${appPath}`, { exit: 1 });
     }
 
     try {
@@ -40,7 +41,7 @@ export default class Synth extends Command {
       const stack = appModule.default || appModule.stack || appModule;
 
       if (!stack || typeof stack.synth !== 'function') {
-        this.error('App must export a Stack instance with a synth() method');
+        this.error('App must export a Stack instance with a synth() method', { exit: 1 });
       }
 
       const manifest = stack.synth();

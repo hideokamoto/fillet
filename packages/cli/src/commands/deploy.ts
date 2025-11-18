@@ -29,8 +29,9 @@ export default class Deploy extends Command {
 
     const appPath = path.resolve(process.cwd(), flags.app);
 
+    // Pre-flight checks outside try block to preserve error messages
     if (!fs.existsSync(appPath)) {
-      this.error(`App file not found: ${appPath}`);
+      this.error(`App file not found: ${appPath}`, { exit: 1 });
     }
 
     try {
@@ -39,7 +40,7 @@ export default class Deploy extends Command {
       const stack = appModule.default || appModule.stack || appModule;
 
       if (!stack || typeof stack.synth !== 'function') {
-        this.error('App must export a Stack instance with a synth() method');
+        this.error('App must export a Stack instance with a synth() method', { exit: 1 });
       }
 
       const manifest: StackManifest = stack.synth();
@@ -47,7 +48,7 @@ export default class Deploy extends Command {
       // Get Stripe API key
       const apiKey = stack.apiKey || process.env.STRIPE_SECRET_KEY;
       if (!apiKey) {
-        this.error('Stripe API key not found. Set STRIPE_SECRET_KEY environment variable.');
+        this.error('Stripe API key not found. Set STRIPE_SECRET_KEY environment variable.', { exit: 1 });
       }
 
       // Deploy using the deployer
