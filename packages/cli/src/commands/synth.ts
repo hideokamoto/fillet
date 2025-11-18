@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import { register } from 'esbuild-register/dist/node';
 
 // Register esbuild to transpile TypeScript files on the fly
-const { unregister } = register({
+register({
   target: 'node18',
 });
 
@@ -38,8 +38,7 @@ export default class Synth extends Command {
 
     // Pre-flight checks outside try block to preserve error messages
     if (!fs.existsSync(appPath)) {
-      this.error(`App file not found: ${appPath}`);
-      return;
+      this.error(`App file not found: ${appPath}`, { exit: 1 });
     }
 
     try {
@@ -49,7 +48,6 @@ export default class Synth extends Command {
 
       if (!stack || typeof stack.synth !== 'function') {
         this.error('App must export a Stack instance with a synth() method', { exit: 1 });
-        return;
       }
 
       const manifest = stack.synth();
