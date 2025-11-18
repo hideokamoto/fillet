@@ -5,7 +5,7 @@ node_modules/
 # Build outputs
 dist/
 *.tsbuildinfo
-stripe-rdk.out/
+pricectl.out/
 
 # IDE
 .vscode/
@@ -38,6 +38,6 @@ coverage/
 /tmp
 
 # Misc
-.stripe-rdk/
+.pricectl/
 /yarn.lock
 dev/

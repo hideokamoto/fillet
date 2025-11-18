@@ -1,27 +1,27 @@
-# Stripe RDK (Revenue Development Kit)
+# pricectl
 
 <p align="center">
-  <strong>Infrastructure as Code for Stripe</strong>
+  <strong>Control your pricing infrastructure as code</strong>
 </p>
 
 <p align="center">
-  AWS CDK-like tool for managing Stripe resources with TypeScript
+  kubectl-style tool for managing Stripe pricing resources with TypeScript
 </p>
 
 ---
 
 ## Overview
 
-Stripe RDK is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS CDK. It allows you to define your Stripe resources (products, prices, coupons, etc.) using TypeScript classes and deploy them with simple CLI commands.
+pricectl is an Infrastructure as Code (IaC) tool for Stripe pricing resources. Inspired by kubectl and AWS CDK, it allows you to define your pricing infrastructure (products, prices, coupons, entitlements, meters) using TypeScript and deploy them with simple CLI commands.
 
-### Why Stripe RDK?
+### Why pricectl?
 
 - **Type-Safe**: Define resources with TypeScript for full IDE support and compile-time checks
 - **Declarative**: Describe what you want, not how to create it
-- **Version Control**: Track changes to your Stripe infrastructure in git
+- **Version Control**: Track changes to your pricing infrastructure in git
 - **Reproducible**: Deploy the same configuration across multiple environments
 - **Preview Changes**: See exactly what will change before deploying
-- **Familiar DX**: If you know AWS CDK, you already know Stripe RDK
+- **Familiar DX**: kubectl-style commands (synth, diff, deploy)
 
 ## Quick Start
 
@@ -29,28 +29,28 @@ Stripe RDK is an Infrastructure as Code (IaC) tool for Stripe, inspired by AWS C
 
 ```bash
 # Using npm
-npm install -g @stripe-rdk/cli
+npm install -g @pricectl/cli
 
 # Using pnpm
-pnpm add -g @stripe-rdk/cli
+pnpm add -g @pricectl/cli
 
 # Using yarn
-yarn global add @stripe-rdk/cli
+yarn global add @pricectl/cli
 ```
 
 ### Initialize a New Project
 
 ```bash
-mkdir my-stripe-infrastructure
-cd my-stripe-infrastructure
-stripe-rdk init
+mkdir my-pricing-infrastructure
+cd my-pricing-infrastructure
+pricectl init
 ```
 
 This creates a basic project structure:
 
 ```
-my-stripe-infrastructure/
-├── stripe-rdk.ts      # Your stack definition
+my-pricing-infrastructure/
+├── pricectl.ts        # Your stack definition
 ├── package.json
 ├── tsconfig.json
 └── .env.example
@@ -58,11 +58,11 @@ my-stripe-infrastructure/
 
 ### Define Your Infrastructure
 
-Edit `stripe-rdk.ts`:
+Edit `pricectl.ts`:
 
 ```typescript
-import { Stack } from '@stripe-rdk/core';
-import { Product, Price, Coupon } from '@stripe-rdk/constructs';
+import { Stack } from '@pricectl/core';
+import { Product, Price, Coupon } from '@pricectl/constructs';
 
 // Create a stack
 const stack = new Stack(undefined, 'MyStack', {
@@ -111,75 +111,75 @@ npm run deploy
 
 ## Architecture
 
-Stripe RDK is a monorepo containing three main packages:
+pricectl is a monorepo containing three main packages:
 
-### 📦 `@stripe-rdk/core`
+### 📦 `@pricectl/core`
 
 Core IaC framework providing:
 - `Construct`: Base class for all resources
 - `Stack`: Container for resources
 - `Resource`: Base class for Stripe resources
 
-### 📦 `@stripe-rdk/constructs`
+### 📦 `@pricectl/constructs`
 
-Stripe resource implementations:
+Stripe pricing resource implementations:
 - `Product`: Stripe products
 - `Price`: Pricing plans (one-time, recurring, tiered, metered)
 - `Coupon`: Discount coupons
-- More coming soon (Customers, Subscriptions, PaymentLinks, etc.)
+- Coming soon: Entitlements, Meters, PromotionCodes
 
-### 📦 `@stripe-rdk/cli`
+### 📦 `@pricectl/cli`
 
 Command-line interface:
-- `stripe-rdk init`: Initialize a new project
-- `stripe-rdk synth`: Synthesize stack to manifest
-- `stripe-rdk diff`: Compare local vs deployed
-- `stripe-rdk deploy`: Deploy to Stripe
-- `stripe-rdk destroy`: Remove all resources
+- `pricectl init`: Initialize a new project
+- `pricectl synth`: Synthesize stack to manifest
+- `pricectl diff`: Compare local vs deployed
+- `pricectl deploy`: Deploy to Stripe
+- `pricectl destroy`: Remove all resources
 
 ## CLI Commands
 
-### `stripe-rdk init`
+### `pricectl init`
 
-Initialize a new Stripe RDK project with example code.
+Initialize a new pricectl project with example code.
 
 ```bash
-stripe-rdk init
+pricectl init
 ```
 
-### `stripe-rdk synth`
+### `pricectl synth`
 
 Synthesize your stack into a deployment manifest.
 
 ```bash
-stripe-rdk synth
-stripe-rdk synth --app ./custom-stack.ts
+pricectl synth
+pricectl synth --app ./custom-stack.ts
 ```
 
-### `stripe-rdk diff`
+### `pricectl diff`
 
 Show differences between your local definition and what's deployed in Stripe.
 
 ```bash
-stripe-rdk diff
-stripe-rdk diff --app ./custom-stack.ts
+pricectl diff
+pricectl diff --app ./custom-stack.ts
 ```
 
-### `stripe-rdk deploy`
+### `pricectl deploy`
 
 Deploy your stack to Stripe.
 
 ```bash
-stripe-rdk deploy
-stripe-rdk deploy --app ./custom-stack.ts
+pricectl deploy
+pricectl deploy --app ./custom-stack.ts
 ```
 
-### `stripe-rdk destroy`
+### `pricectl destroy`
 
 Remove all resources defined in your stack from Stripe.
 
 ```bash
-stripe-rdk destroy --force
+pricectl destroy --force
 ```
 
 ## Available Resources
@@ -285,10 +285,10 @@ pnpm build
 ### Project Structure
 
 ```
-stripe-rdk/
+pricectl/
 ├── packages/
 │   ├── core/          # Core IaC framework
-│   ├── constructs/    # Stripe resource constructs
+│   ├── constructs/    # Stripe pricing constructs
 │   └── cli/           # Command-line interface
 ├── examples/
 │   ├── basic-subscription/
@@ -341,14 +341,15 @@ pnpm test
 
 ## Comparison with Other Tools
 
-| Feature | Stripe RDK | YAML/JSON | Terraform | Manual |
-|---------|------------|-----------|-----------|--------|
+| Feature | pricectl | YAML/JSON | Terraform | Manual |
+|---------|----------|-----------|-----------|--------|
 | Type Safety | ✅ | ❌ | ⚠️ | ❌ |
 | IDE Support | ✅ | ⚠️ | ⚠️ | N/A |
 | Diff Preview | ✅ | ❌ | ✅ | ❌ |
 | Version Control | ✅ | ✅ | ✅ | ❌ |
 | Programmatic | ✅ | ❌ | ⚠️ | ✅ |
 | Stripe-Native | ✅ | ✅ | ❌ | ✅ |
+| Pricing-Focused | ✅ | ❌ | ❌ | ❌ |
 
 ## Contributing
 

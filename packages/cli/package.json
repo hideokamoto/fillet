@@ -1,11 +1,11 @@
 {
-  "name": "@stripe-rdk/cli",
+  "name": "@pricectl/cli",
   "version": "0.1.0",
-  "description": "CLI for Stripe RDK (Revenue Development Kit)",
+  "description": "CLI for pricectl - Control your pricing infrastructure",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "stripe-rdk": "./bin/run"
+    "pricectl": "./bin/run"
   },
   "scripts": {
     "build": "tsc",
@@ -16,8 +16,8 @@
   "keywords": ["stripe", "iac", "cli"],
   "license": "MIT",
   "dependencies": {
-    "@stripe-rdk/core": "workspace:*",
-    "@stripe-rdk/constructs": "workspace:*",
+    "@pricectl/core": "workspace:*",
+    "@pricectl/constructs": "workspace:*",
     "@oclif/core": "^3.15.0",
     "@oclif/plugin-help": "^6.0.9",
     "stripe": "^14.9.0",
@@ -30,7 +30,7 @@
     "@types/diff": "^5.0.9"
   },
   "oclif": {
-    "bin": "stripe-rdk",
+    "bin": "pricectl",
     "commands": "./dist/commands",
     "hooks": {
       "init": "./dist/hooks/init"

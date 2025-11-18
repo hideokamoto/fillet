@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const cliPackageJson = require('../../package.json');
 
 export default class Init extends Command {
-  static description = 'Initialize a new Stripe RDK project';
+  static description = 'Initialize a new pricectl project';
 
   static examples = [
     '<%= config.bin %> <%= command.id %>',
@@ -30,7 +30,7 @@ export default class Init extends Command {
   async run(): Promise<void> {
     const { flags } = await this.parse(Init);
 
-    this.log('Initializing Stripe RDK project...');
+    this.log('Initializing pricectl project...');
     this.log('');
 
     const cwd = process.cwd();
@@ -38,8 +38,8 @@ export default class Init extends Command {
     // Create package.json if it doesn't exist
     const packageJsonPath = path.join(cwd, 'package.json');
     if (!fs.existsSync(packageJsonPath)) {
-      // Use the CLI's version for all @stripe-rdk/* packages to ensure compatibility
-      const rdkVersion = `^${cliPackageJson.version}`;
+      // Use the CLI's version for all @pricectl/* packages to ensure compatibility
+      const pricectlVersion = `^${cliPackageJson.version}`;
 
       const packageJson = {
         name: path.basename(cwd),
@@ -47,16 +47,16 @@ export default class Init extends Command {
         private: true,
         scripts: {
           build: 'tsc',
-          synth: 'stripe-rdk synth',
-          deploy: 'stripe-rdk deploy',
-          diff: 'stripe-rdk diff',
+          synth: 'pricectl synth',
+          deploy: 'pricectl deploy',
+          diff: 'pricectl diff',
         },
         dependencies: {
-          '@stripe-rdk/core': rdkVersion,
-          '@stripe-rdk/constructs': rdkVersion,
+          '@pricectl/core': pricectlVersion,
+          '@pricectl/constructs': pricectlVersion,
         },
         devDependencies: {
-          '@stripe-rdk/cli': rdkVersion,
+          '@pricectl/cli': pricectlVersion,
           '@types/node': '^20.10.0',
           typescript: '^5.3.3',
         },
@@ -88,11 +88,11 @@ export default class Init extends Command {
       this.log(chalk.green('✓ Created tsconfig.json'));
     }
 
-    // Create example stripe-rdk.ts
-    const rdkTsPath = path.join(cwd, 'stripe-rdk.ts');
-    if (!fs.existsSync(rdkTsPath) || flags.force) {
-      const example = `import { Stack } from '@stripe-rdk/core';
-import { Product, Price, Coupon } from '@stripe-rdk/constructs';
+    // Create example pricectl.ts
+    const pricectlTsPath = path.join(cwd, 'pricectl.ts');
+    if (!fs.existsSync(pricectlTsPath) || flags.force) {
+      const example = `import { Stack } from '@pricectl/core';
+import { Product, Price, Coupon } from '@pricectl/constructs';
 
 // Create a new stack
 const stack = new Stack(undefined, 'MyStack', {
@@ -138,8 +138,8 @@ new Coupon(stack, 'WelcomeCoupon', {
 export default stack;
 `;
 
-      fs.writeFileSync(rdkTsPath, example);
-      this.log(chalk.green('✓ Created stripe-rdk.ts'));
+      fs.writeFileSync(pricectlTsPath, example);
+      this.log(chalk.green('✓ Created pricectl.ts'));
     }
 
     // Create .env.example
@@ -153,7 +153,7 @@ export default stack;
     const gitignorePath = path.join(cwd, '.gitignore');
     const gitignoreContent = `
 .env
-stripe-rdk.out/
+pricectl.out/
 node_modules/
 dist/
 *.js
@@ -165,7 +165,7 @@ dist/
       this.log(chalk.green('✓ Created .gitignore'));
     } else if (flags.force) {
       const existing = fs.readFileSync(gitignorePath, 'utf-8');
-      if (!existing.includes('stripe-rdk.out/')) {
+      if (!existing.includes('pricectl.out/')) {
         fs.appendFileSync(gitignorePath, '\n' + gitignoreContent + '\n');
         this.log(chalk.green('✓ Updated .gitignore'));
       }

@@ -1,19 +1,19 @@
 {
-  "name": "@stripe-rdk/example-advanced-pricing",
+  "name": "@pricectl/example-advanced-pricing",
   "version": "0.1.0",
   "private": true,
-  "description": "Advanced pricing example with tiered and metered billing for Stripe RDK",
+  "description": "Advanced pricing example with tiered and metered billing for pricectl",
   "scripts": {
     "build": "tsc",
-    "synth": "stripe-rdk synth",
-    "deploy": "stripe-rdk deploy",
-    "diff": "stripe-rdk diff",
-    "destroy": "stripe-rdk destroy"
+    "synth": "pricectl synth",
+    "deploy": "pricectl deploy",
+    "diff": "pricectl diff",
+    "destroy": "pricectl destroy"
   },
   "dependencies": {
-    "@stripe-rdk/cli": "workspace:*",
-    "@stripe-rdk/constructs": "workspace:*",
-    "@stripe-rdk/core": "workspace:*"
+    "@pricectl/cli": "workspace:*",
+    "@pricectl/constructs": "workspace:*",
+    "@pricectl/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

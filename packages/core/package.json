@@ -1,7 +1,7 @@
 {
-  "name": "@stripe-rdk/core",
+  "name": "@pricectl/core",
   "version": "0.1.0",
-  "description": "Core IaC library for Stripe RDK (Revenue Development Kit)",
+  "description": "Core IaC library for pricectl",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

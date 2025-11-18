@@ -1,5 +1,5 @@
-import { Stack } from '@stripe-rdk/core';
-import { Product, Price } from '@stripe-rdk/constructs';
+import { Stack } from '@pricectl/core';
+import { Product, Price } from '@pricectl/constructs';
 
 /**
  * Advanced Pricing Example

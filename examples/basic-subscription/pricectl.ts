@@ -1,5 +1,5 @@
-import { Stack } from '@stripe-rdk/core';
-import { Product, Price, Coupon } from '@stripe-rdk/constructs';
+import { Stack } from '@pricectl/core';
+import { Product, Price, Coupon } from '@pricectl/constructs';
 
 /**
  * Basic Subscription Example

@@ -1,6 +1,6 @@
 # Basic Subscription Example
 
-This example demonstrates how to create a simple SaaS subscription infrastructure using Stripe RDK.
+This example demonstrates how to create a simple SaaS subscription infrastructure using pricectl.
 
 ## What's Included
 
@@ -11,7 +11,7 @@ This example demonstrates how to create a simple SaaS subscription infrastructur
 ## Project Structure
 
 ```
-├── stripe-rdk.ts      # Stack definition
+├── pricectl.ts        # Stack definition
 ├── package.json       # Project dependencies
 └── tsconfig.json      # TypeScript configuration
 ```
@@ -64,7 +64,7 @@ This example demonstrates how to create a simple SaaS subscription infrastructur
 
 ## Customization
 
-Edit `stripe-rdk.ts` to:
+Edit `pricectl.ts` to:
 - Add or remove pricing tiers
 - Change pricing amounts
 - Create new promotional campaigns
@@ -72,4 +72,4 @@ Edit `stripe-rdk.ts` to:
 
 ## Learn More
 
-See the [main documentation](../../README.md) for more information about Stripe RDK.
+See the [main documentation](../../README.md) for more information about pricectl.

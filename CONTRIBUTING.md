@@ -1,6 +1,6 @@
-# Contributing to Stripe RDK
+# Contributing to pricectl
 
-Thank you for your interest in contributing to Stripe RDK! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to pricectl! This document provides guidelines and information for contributors.
 
 ## Getting Started
 
@@ -34,10 +34,10 @@ Thank you for your interest in contributing to Stripe RDK! This document provide
 ### Project Structure
 
 ```
-stripe-rdk/
+pricectl/
 ├── packages/
 │   ├── core/          # Core IaC framework
-│   ├── constructs/    # Stripe resource constructs
+│   ├── constructs/    # Stripe pricing constructs
 │   └── cli/           # Command-line interface
 └── examples/          # Example projects
 ```
@@ -72,23 +72,23 @@ To add support for a new Stripe resource:
 
 1. Create a new file in `packages/constructs/src/`:
    ```typescript
-   // packages/constructs/src/webhook-endpoint.ts
-   import { Construct, Resource, ResourceProps } from '@stripe-rdk/core';
+   // packages/constructs/src/entitlement.ts
+   import { Construct, Resource, ResourceProps } from '@pricectl/core';
    import type Stripe from 'stripe';
 
-   export interface WebhookEndpointProps extends ResourceProps {
-     readonly url: string;
-     readonly enabledEvents: string[];
+   export interface EntitlementProps extends ResourceProps {
+     readonly feature: string;
+     readonly name: string;
    }
 
-   export class WebhookEndpoint extends Resource {
+   export class Entitlement extends Resource {
      // Implementation...
    }
    ```
 
 2. Export it from `packages/constructs/src/index.ts`:
    ```typescript
-   export * from './webhook-endpoint';
+   export * from './entitlement';
    ```
 
 3. Add deployment logic in `packages/cli/src/engine/deployer.ts`
@@ -149,7 +149,7 @@ Use conventional commits format:
 
 ## Adding Examples
 
-Examples help users understand how to use Stripe RDK:
+Examples help users understand how to use pricectl:
 
 1. Create a new directory in `examples/`
 2. Add a complete working example
@@ -166,4 +166,4 @@ Examples help users understand how to use Stripe RDK:
 
 By contributing, you agree that your contributions will be licensed under the MIT License.
 
-Thank you for contributing to Stripe RDK!
+Thank you for contributing to pricectl!

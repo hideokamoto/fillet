@@ -1,8 +1,8 @@
 {
-  "name": "@stripe-rdk/monorepo",
+  "name": "@pricectl/monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "Stripe Revenue Development Kit (RDK) - Infrastructure as Code for Stripe resources",
+  "description": "pricectl - Infrastructure as Code for Stripe pricing resources",
   "workspaces": [
     "packages/*",
     "examples/*"
