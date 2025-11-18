@@ -35,17 +35,17 @@ export default class Synth extends Command {
       this.error(`App file not found: ${appPath}`, { exit: 1 });
     }
 
+    // Dynamically import the user's stack definition (validation outside try block)
+    const appModule = require(appPath);
+    const stack = appModule.default || appModule.stack || appModule;
+
+    if (!stack || typeof stack.synth !== 'function') {
+      this.error('App must export a Stack instance with a synth() method', { exit: 1 });
+    }
+
+    const manifest = stack.synth();
+
     try {
-      // Dynamically import the user's stack definition
-      const appModule = require(appPath);
-      const stack = appModule.default || appModule.stack || appModule;
-
-      if (!stack || typeof stack.synth !== 'function') {
-        this.error('App must export a Stack instance with a synth() method', { exit: 1 });
-      }
-
-      const manifest = stack.synth();
-
       // Ensure output directory exists
       const outputDir = path.resolve(process.cwd(), flags.output);
       if (!fs.existsSync(outputDir)) {

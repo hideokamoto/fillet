@@ -37,16 +37,17 @@ export default class Destroy extends Command {
       this.error(`App file not found: ${appPath}`, { exit: 1 });
     }
 
+    // Load and synthesize the stack (validation outside try block)
+    const appModule = require(appPath);
+    const stack = appModule.default || appModule.stack || appModule;
+
+    if (!stack || typeof stack.synth !== 'function') {
+      this.error('App must export a Stack instance with a synth() method', { exit: 1 });
+    }
+
+    const manifest: StackManifest = stack.synth();
+
     try {
-      // Load and synthesize the stack
-      const appModule = require(appPath);
-      const stack = appModule.default || appModule.stack || appModule;
-
-      if (!stack || typeof stack.synth !== 'function') {
-        this.error('App must export a Stack instance with a synth() method', { exit: 1 });
-      }
-
-      const manifest: StackManifest = stack.synth();
 
       this.log(chalk.bold.yellow(`⚠️  You are about to destroy stack: ${manifest.stackId}`));
       this.log('');
