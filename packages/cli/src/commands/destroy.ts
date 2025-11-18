@@ -11,6 +11,7 @@ export default class Destroy extends Command {
   static examples = [
     '<%= config.bin %> <%= command.id %>',
     '<%= config.bin %> <%= command.id %> --app ./infra/main.ts',
+    '<%= config.bin %> <%= command.id %> --force',
   ];
 
   static flags = {
@@ -70,9 +71,39 @@ export default class Destroy extends Command {
       this.log('');
 
       const deployer = new StripeDeployer(apiKey);
-      await deployer.destroy(manifest);
+      const result = await deployer.destroy(manifest);
 
-      this.log(chalk.bold.green('✓ Stack destroyed'));
+      // Display results
+      this.log(chalk.bold.green('✓ Destruction completed'));
+      this.log('');
+
+      if (result.destroyed.length > 0) {
+        this.log(chalk.bold('Destroyed resources:'));
+        for (const item of result.destroyed) {
+          const status = item.status === 'deleted' ? chalk.red('deleted') : chalk.yellow('deactivated');
+          this.log(`  ${status} ${item.id} [${item.type}]`);
+        }
+        this.log('');
+      }
+
+      if (result.errors.length > 0) {
+        this.log(chalk.bold.red('Errors:'));
+        for (const error of result.errors) {
+          this.log(`  ${chalk.red('✗')} ${error.id}: ${error.error}`);
+        }
+        this.log('');
+      }
+
+      const deleted = result.destroyed.filter(d => d.status === 'deleted').length;
+      const deactivated = result.destroyed.filter(d => d.status === 'deactivated').length;
+
+      this.log(chalk.bold('Summary:'));
+      this.log(`  Deleted: ${chalk.red(deleted)}`);
+      this.log(`  Deactivated: ${chalk.yellow(deactivated)}`);
+      if (result.errors.length > 0) {
+        this.log(`  Errors: ${chalk.red(result.errors.length)}`);
+        this.error('Some resources could not be destroyed. See errors above.');
+      }
     } catch (error: any) {
       this.error(`Destroy failed: ${error.message}`);
     }

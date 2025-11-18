@@ -26,8 +26,6 @@ export class Stack extends Construct {
   public readonly description?: string;
   public readonly tags: Record<string, string>;
 
-  private _resources: Map<string, any> = new Map();
-
   constructor(scope: Construct | undefined, id: string, props: StackProps = {}) {
     super(scope, id);
 
@@ -40,30 +38,6 @@ export class Stack extends Construct {
         'Stripe API key is required. Set it via props.apiKey or STRIPE_SECRET_KEY environment variable.'
       );
     }
-  }
-
-  /**
-   * Register a resource in this stack
-   */
-  public addResource(id: string, resource: any): void {
-    if (this._resources.has(id)) {
-      throw new Error(`Resource with id "${id}" already exists in stack "${this.node.id}"`);
-    }
-    this._resources.set(id, resource);
-  }
-
-  /**
-   * Get a resource by id
-   */
-  public getResource(id: string): any {
-    return this._resources.get(id);
-  }
-
-  /**
-   * Get all resources in this stack
-   */
-  public get resources(): Map<string, any> {
-    return new Map(this._resources);
   }
 
   /**

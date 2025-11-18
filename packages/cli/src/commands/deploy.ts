@@ -19,11 +19,6 @@ export default class Deploy extends Command {
       description: 'Path to the app file that defines your stack',
       default: './fillet.ts',
     }),
-    'require-approval': Flags.string({
-      description: 'What security-sensitive changes need manual approval',
-      options: ['never', 'any-change', 'broadening'],
-      default: 'broadening',
-    }),
   };
 
   async run(): Promise<void> {

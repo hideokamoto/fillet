@@ -16,8 +16,23 @@ export interface DeployResult {
   }>;
 }
 
+export interface DestroyResult {
+  stackId: string;
+  destroyed: Array<{
+    id: string;
+    type: string;
+    status: 'deleted' | 'deactivated';
+  }>;
+  errors: Array<{
+    id: string;
+    type: string;
+    error: string;
+  }>;
+}
+
 export class StripeDeployer {
   private stripe: Stripe;
+  private logicalToPhysicalId: Map<string, string> = new Map();
 
   constructor(apiKey: string) {
     this.stripe = new Stripe(apiKey, {
@@ -32,10 +47,16 @@ export class StripeDeployer {
       errors: [],
     };
 
+    // Reset the ID mapping for this deployment
+    this.logicalToPhysicalId.clear();
+
     for (const resource of manifest.resources) {
       try {
         const deployed = await this.deployResource(resource);
         result.deployed.push(deployed);
+
+        // Store the mapping from logical ID to physical ID
+        this.logicalToPhysicalId.set(resource.id, deployed.physicalId);
       } catch (error: any) {
         result.errors.push({
           id: resource.id,
@@ -62,7 +83,6 @@ export class StripeDeployer {
   }
 
   private async deployProduct(resource: ResourceManifest) {
-    // Check if product already exists (you can use metadata to store logical IDs)
     const existing = await this.findExistingProduct(resource.id);
 
     if (existing) {
@@ -94,12 +114,14 @@ export class StripeDeployer {
   }
 
   private async deployPrice(resource: ResourceManifest) {
-    // Prices cannot be updated, only created
+    // Resolve the product dependency
+    const properties = this.resolveDependencies(resource.properties);
+
     const existing = await this.findExistingPrice(resource.id);
 
     if (existing) {
       // Check if properties match
-      const propsMatch = this.comparePriceProperties(existing, resource.properties);
+      const propsMatch = this.comparePriceProperties(existing, properties);
       if (propsMatch) {
         return {
           id: resource.id,
@@ -111,9 +133,9 @@ export class StripeDeployer {
         // Deactivate old price and create new one
         await this.stripe.prices.update(existing.id, { active: false });
         const created = await this.stripe.prices.create({
-          ...resource.properties,
+          ...properties,
           metadata: {
-            ...resource.properties.metadata,
+            ...properties.metadata,
             fillet_id: resource.id,
             fillet_path: resource.path,
           },
@@ -127,9 +149,9 @@ export class StripeDeployer {
       }
     } else {
       const created = await this.stripe.prices.create({
-        ...resource.properties,
+        ...properties,
         metadata: {
-          ...resource.properties.metadata,
+          ...properties.metadata,
           fillet_id: resource.id,
           fillet_path: resource.path,
         },
@@ -144,7 +166,6 @@ export class StripeDeployer {
   }
 
   private async deployCoupon(resource: ResourceManifest) {
-    // Check if coupon already exists
     try {
       const existing = await this.stripe.coupons.retrieve(resource.id);
       return {
@@ -171,75 +192,203 @@ export class StripeDeployer {
     }
   }
 
+  /**
+   * Resolve logical IDs to physical IDs in resource properties.
+   * This is critical for handling dependencies between resources.
+   */
+  private resolveDependencies(properties: any): any {
+    const resolved = { ...properties };
+
+    // Resolve product reference in Price
+    if (resolved.product && typeof resolved.product === 'string') {
+      const physicalId = this.logicalToPhysicalId.get(resolved.product);
+      if (physicalId) {
+        resolved.product = physicalId;
+      }
+    }
+
+    return resolved;
+  }
+
   private async findExistingProduct(logicalId: string): Promise<Stripe.Product | null> {
     try {
-      const products = await this.stripe.products.list({ limit: 100 });
-      const found = products.data.find(p => p.metadata?.fillet_id === logicalId);
-      return found || null;
-    } catch {
+      // Use search API for efficient lookup by metadata
+      const result = await this.stripe.products.search({
+        query: `metadata['fillet_id']:'${logicalId}'`,
+        limit: 1,
+      });
+
+      if (result.data.length > 0) {
+        return result.data[0];
+      }
+
       return null;
+    } catch (error: any) {
+      // Only return null for resource_missing errors
+      if (error.code === 'resource_missing') {
+        return null;
+      }
+      // Re-throw other errors (auth, network, etc.)
+      throw error;
     }
   }
 
   private async findExistingPrice(logicalId: string): Promise<Stripe.Price | null> {
     try {
-      const prices = await this.stripe.prices.list({ limit: 100 });
-      const found = prices.data.find(p => p.metadata?.fillet_id === logicalId);
-      return found || null;
-    } catch {
+      // Use search API for efficient lookup by metadata
+      const result = await this.stripe.prices.search({
+        query: `metadata['fillet_id']:'${logicalId}'`,
+        limit: 1,
+      });
+
+      if (result.data.length > 0) {
+        return result.data[0];
+      }
+
       return null;
+    } catch (error: any) {
+      // Only return null for resource_missing errors
+      if (error.code === 'resource_missing') {
+        return null;
+      }
+      // Re-throw other errors (auth, network, etc.)
+      throw error;
     }
   }
 
+  /**
+   * Compare all relevant properties of a price to determine if it needs to be recreated.
+   * Prices are immutable in Stripe, so any property change requires deactivating
+   * the old price and creating a new one.
+   */
   private comparePriceProperties(existing: Stripe.Price, desired: any): boolean {
-    return (
-      existing.currency === desired.currency &&
-      existing.unit_amount === desired.unit_amount &&
-      existing.recurring?.interval === desired.recurring?.interval &&
-      existing.recurring?.interval_count === desired.recurring?.interval_count
-    );
+    // Compare basic properties
+    if (existing.currency !== desired.currency) return false;
+    if (existing.unit_amount !== desired.unit_amount) return false;
+    if (existing.unit_amount_decimal !== desired.unit_amount_decimal) return false;
+    if (existing.active !== desired.active) return false;
+    if (existing.nickname !== desired.nickname) return false;
+
+    // Compare recurring properties
+    if (desired.recurring) {
+      if (!existing.recurring) return false;
+      if (existing.recurring.interval !== desired.recurring.interval) return false;
+      if (existing.recurring.interval_count !== desired.recurring.interval_count) return false;
+      if (existing.recurring.usage_type !== desired.recurring.usage_type) return false;
+      if (existing.recurring.trial_period_days !== desired.recurring.trial_period_days) return false;
+    } else if (existing.recurring) {
+      return false;
+    }
+
+    // Compare tiers
+    if (desired.tiers_mode !== existing.tiers_mode) return false;
+
+    if (desired.tiers) {
+      if (!existing.tiers || existing.tiers.length !== desired.tiers.length) return false;
+
+      for (let i = 0; i < desired.tiers.length; i++) {
+        const existingTier = existing.tiers[i];
+        const desiredTier = desired.tiers[i];
+
+        if (existingTier.up_to !== desiredTier.up_to) return false;
+        if (existingTier.unit_amount !== desiredTier.unit_amount) return false;
+        if (existingTier.flat_amount !== desiredTier.flat_amount) return false;
+      }
+    } else if (existing.tiers) {
+      return false;
+    }
+
+    // Compare transform_quantity
+    if (desired.transform_quantity) {
+      if (!existing.transform_quantity) return false;
+      if (existing.transform_quantity.divide_by !== desired.transform_quantity.divide_by) return false;
+      if (existing.transform_quantity.round !== desired.transform_quantity.round) return false;
+    } else if (existing.transform_quantity) {
+      return false;
+    }
+
+    // Compare lookup_key
+    if (existing.lookup_key !== desired.lookup_key) return false;
+
+    return true;
   }
 
-  async destroy(manifest: StackManifest): Promise<void> {
-    // Delete resources in reverse order
+  async destroy(manifest: StackManifest): Promise<DestroyResult> {
+    const result: DestroyResult = {
+      stackId: manifest.stackId,
+      destroyed: [],
+      errors: [],
+    };
+
+    // Delete resources in reverse order to handle dependencies
     const resources = [...manifest.resources].reverse();
 
     for (const resource of resources) {
       try {
-        await this.destroyResource(resource);
+        const destroyed = await this.destroyResource(resource);
+        if (destroyed) {
+          result.destroyed.push(destroyed);
+        }
       } catch (error: any) {
-        console.error(`Failed to delete ${resource.id}:`, error.message);
+        result.errors.push({
+          id: resource.id,
+          type: resource.type,
+          error: error.message,
+        });
       }
     }
+
+    return result;
   }
 
-  private async destroyResource(resource: ResourceManifest): Promise<void> {
+  private async destroyResource(resource: ResourceManifest): Promise<{
+    id: string;
+    type: string;
+    status: 'deleted' | 'deactivated';
+  } | null> {
     switch (resource.type) {
       case 'Stripe::Product': {
         const existing = await this.findExistingProduct(resource.id);
         if (existing) {
           await this.stripe.products.del(existing.id);
+          return {
+            id: resource.id,
+            type: resource.type,
+            status: 'deleted',
+          };
         }
-        break;
+        return null;
       }
       case 'Stripe::Price': {
         const existing = await this.findExistingPrice(resource.id);
         if (existing) {
           // Prices cannot be deleted, only deactivated
           await this.stripe.prices.update(existing.id, { active: false });
+          return {
+            id: resource.id,
+            type: resource.type,
+            status: 'deactivated',
+          };
         }
-        break;
+        return null;
       }
       case 'Stripe::Coupon': {
         try {
           await this.stripe.coupons.del(resource.id);
+          return {
+            id: resource.id,
+            type: resource.type,
+            status: 'deleted',
+          };
         } catch (error: any) {
-          if (error.code !== 'resource_missing') {
-            throw error;
+          if (error.code === 'resource_missing') {
+            return null;
           }
+          throw error;
         }
-        break;
       }
+      default:
+        throw new Error(`Unknown resource type: ${resource.type}`);
     }
   }
 }

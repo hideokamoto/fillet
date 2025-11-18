@@ -189,7 +189,7 @@ fillet destroy --force
 Define a Stripe product:
 
 ```typescript
-new Product(stack, 'MyProduct', {
+const myProduct = new Product(stack, 'MyProduct', {
   name: 'My Product',
   description: 'Product description',
   active: true,
